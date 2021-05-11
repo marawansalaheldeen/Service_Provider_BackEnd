@@ -29,11 +29,11 @@ app.all('', function (req, res, next) {
 db.sequelize
     .sync({
         // force: config.NODE_ENV === 'development' ? true : false
-        force:  true 
+        force:  false 
         // console.log("database connected");
     })
     .then(() => console.log("DB connected"))
-    .catch(console.log("error"));
+    .catch((err) => console.log("error", err));
 
 // app.use('/api', routes);
 control(app)

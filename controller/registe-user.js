@@ -14,14 +14,15 @@ module.exports.registerUser = async (req, res) => {
             latitude: req.body.user_latitude,
         }
 
-        const user = User.createUser(userData);
+        const user = await User.createUser(userData);
         console.log(user);
+        res.status(200).send(user)
     } catch (err) {
-        requestHandler.HandleRequest(err, (result) => {
-            // logger.error(`error`, `userRegister - ${result.errors}`)
-            console.log(result.errors);
-            res.status(result.status).send("Data Not Valid");
-        });
+        // requestHandler.HandleRequest(err, (result) => {
+        //     // logger.error(`error`, `userRegister - ${result.errors}`)
+        //     console.log(result.errors);
+        //     res.status(result.status).send("Data Not Valid");
+        // });
     }
 };
 
