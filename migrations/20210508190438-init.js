@@ -115,11 +115,13 @@ module.exports = {
       },
       created_at: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        timestamps  : true
       },
       updated_at: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        timestamps  : true
       }
     });
 
@@ -158,7 +160,7 @@ module.exports = {
     });
 
     await queryInterface.createTable('sevice_provider', {
-      sevice_provider_id: {
+      service_provider_id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
@@ -178,7 +180,7 @@ module.exports = {
       company_type: {
         type: Sequelize.STRING,
       },
-      constact_role: {
+      contact_role: {
         type: Sequelize.STRING,
       },
       created_at: {
@@ -192,13 +194,13 @@ module.exports = {
     });
 
     await queryInterface.createTable('sevice_provider_location', {
-      sevice_provider_location_id: {
+      service_provider_location_id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      sevice_provider_id:{
+      service_provider_id:{
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
@@ -243,12 +245,12 @@ module.exports = {
           key: 'user_id'
         }
       },
-      sevice_provider_location_id:{
+      service_provider_location_id:{
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'sevice_provider_location',
-          key: 'sevice_provider_location_id'
+          model: 'service_provider_location',
+          key: 'service_provider_location_id'
         }
       },
       is_available: {

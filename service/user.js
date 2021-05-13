@@ -3,20 +3,21 @@ const cryptr = new Cryptr('myTotalySecretKey');
 const nodemailer = require("nodemailer");
 
 const { sequelize, User } = require('../models');
+const custoemrService = require('./customer');
+const providerService = require('./service-provider');
+const workerService = require('./worker');
 const config = require('../config');
 
 exports.createUser = async function (userData) {
     var ifExist = await ifUserExist(userData.user_email);
-    // var ifExist = false;
+    console.log("checking is done");
     console.log("if exist", ifExist);
     if (!ifExist) {
         const databasepassword = userData.user_password;
         const encryptdPassword = cryptr.encrypt(databasepassword);
         userData.user_password = encryptdPassword;
-        console.log("entered service");
-        console.log();
-        userData.id = 1;
-        const { id, user_first_name,
+
+        const { user_first_name,
             user_last_name,
             phone_number,
             user_region_id,
@@ -37,23 +38,39 @@ exports.createUser = async function (userData) {
                 longitude,
                 latitude
             })
-            console.log("user._options.isNewRecord", user._options.isNewRecord);
+            console.log("user", user.dataValues.user_id);
             if (user._options.isNewRecord) {
                 // send email with
                 var isSent = await verifyEmail(userData.user_email);
+
+                userData.user_id = user.dataValues.user_id;
+                // Worker
+                if (userData.user_type_id == 4) {
+                    console.log("entered for adding cust", userData.user_type_id);
+                    return (await custoemrService.createCustomer(userData));
+                } else if (userData.user_type_id == 2) {
+                    // Service provider
+                    return (await providerService.createServiceProvider(userData));
+                } else if (userData.user_type_id == 3) {
+                    // worker registered by worker provider
+                    return (await workerService.createWorker(userData));
+                }
                 console.log("plaaaaaaaaaaaaa");
                 console.log("is sent", isSent);
                 // if (isSent) {
-                    console.log("return user");
-                    return user;
+                console.log("return user");
+                return user;
                 // }
+            } else {
+                return false;
             }
-            console.log(user.user_email);
-            console.log(user instanceof User)
         } catch (err) {
             console.log(err);
+            return false;
         }
 
+    } else {
+        return false;
     }
 }
 
@@ -65,7 +82,6 @@ async function ifUserExist(user_email) {
         return false;
     } else {
         console.log(user instanceof User); // true
-        console.log(project.phone_number); // 'My phone_number'
         return true;
     }
 }
@@ -109,14 +125,24 @@ const verifyEmail = async (email) => {
 
        <div class="container">
        <div class="card">
-         <img src="https://lh3.googleusercontent.com/ytP9VP86DItizVX2YNA-xTYzV09IS7rh4WexVp7eilIcfHmm74B7odbcwD5DTXmL0PF42i2wnRKSFPBHlmSjCblWHDCD2oD1oaM1CGFcSd48VBKJfsCi4bS170PKxGwji8CPmehwPw=w200-h247-no" alt="Person" class="card__image">
-         <p class="card__name">ON WAY</p>
+         <img style="
+         margin-left: 45%;
+       " src="https://lh3.googleusercontent.com/ytP9VP86DItizVX2YNA-xTYzV09IS7rh4WexVp7eilIcfHmm74B7odbcwD5DTXmL0PF42i2wnRKSFPBHlmSjCblWHDCD2oD1oaM1CGFcSd48VBKJfsCi4bS170PKxGwji8CPmehwPw=w200-h247-no" alt="Person" class="card__image">
+         <p class="card__name"  style="
+         line-height: 26px;
+         margin-left: 50%;
+         font-weight: bold;
+       ">ON WAY</p>
          <div class="grid-container">
      
          <h1 style="
-         color: #990000;
          font-family: 'Google Sans';
          font-size: 17px;
+         padding: 10px 0;
+         line-height: 26px;
+         margin-left: 78px;
+         color: #000000;
+         font-weight: bold;
        ">You're on your way!
        Let's confirm your email address.</h1>
        <p style="
@@ -130,14 +156,14 @@ const verifyEmail = async (email) => {
        By clicking on the following link, you are confirming your email address.</p>
      
          </div>
-         <ul class="social-icons">
-           <li><a href="#"><i class="fa fa-instagram"></i></a></li>
-           <li><a href="#"><i class="fa fa-twitter"></i></a></li>
-           <li><a href="#"><i class="fa fa-linkedin"></i></a></li>
-           <li><a href="#"><i class="fa fa-codepen"></i></a></li>
-         </ul>
-         <button class="btn draw-border" onclick="window.location.href='http://localhost:3000/confirm/?tk=${token}';">Confirm email address ✔️</button>
-     
+        
+         <form action="http://localhost:3000/confirm/?tk=${token}">
+            <input style="
+            margin-left: 50%;
+            color: #008000;
+            font-weight: bold;
+          " type="submit" value="Confirm" />
+        </form>
        </div>
 
     
@@ -160,5 +186,5 @@ const verifyEmail = async (email) => {
         return info
     })
 
-    
+
 }
