@@ -8,6 +8,7 @@
     "migrate": "npx sequelize-cli db:migrate",
     "make-seed": "npx sequelize-cli seed:generate --name user-type",
     "seed": "npx sequelize-cli db:seed:all",
+    "rm-last-mig": "npx sequelize-cli db:migrate:undo",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon app.js"
   },

@@ -2,12 +2,12 @@ const jwt = require("jsonwebtoken");
 // const { ExpiredSecurityTokenException, UnAuthorizedToken } = require('../helper/exception.js');
 // const requestHandler = require('../helper/requestHandler');
 
-const {TOKEN_KEY} = require('./index');
+// const {TOKEN_KEY} = require('./index');
 const jwtExpirySeconds = '8000s'; // 24 hours
 
 // create token by user email
 const createToken = (userEmail) => {
-    console.log(TOKEN_KEY);
+    // console.log(TOKEN_KEY);
     const claims = { issuer: userEmail, subject: 'auth' }
     return token = jwt.sign(claims, "token-secret-key", { expiresIn: jwtExpirySeconds })
 }
