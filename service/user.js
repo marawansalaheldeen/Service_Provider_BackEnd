@@ -5,6 +5,7 @@ const nodemailer = require("nodemailer");
 const { sequelize, User } = require('../models');
 const custoemrService = require('./customer');
 const providerService = require('./service-provider');
+const workerService = require('./worker');
 const config = require('../config');
 
 exports.createUser = async function (userData) {
@@ -15,10 +16,8 @@ exports.createUser = async function (userData) {
         const databasepassword = userData.user_password;
         const encryptdPassword = cryptr.encrypt(databasepassword);
         userData.user_password = encryptdPassword;
-        console.log("entered service");
-        console.log();
-        userData.id = 1;
-        const { id, user_first_name,
+
+        const { user_first_name,
             user_last_name,
             phone_number,
             user_region_id,
@@ -43,15 +42,18 @@ exports.createUser = async function (userData) {
             if (user._options.isNewRecord) {
                 // send email with
                 var isSent = await verifyEmail(userData.user_email);
-                
+
                 userData.user_id = user.dataValues.user_id;
                 // Worker
                 if (userData.user_type_id == 4) {
-                    console.log("entered for adding cust",userData.user_type_id);
-                    return(await custoemrService.createCustomer(userData));
-                }else if(userData.user_type_id == 2){
+                    console.log("entered for adding cust", userData.user_type_id);
+                    return (await custoemrService.createCustomer(userData));
+                } else if (userData.user_type_id == 2) {
                     // Service provider
-                    return( await providerService.createServiceProvider(userData));
+                    return (await providerService.createServiceProvider(userData));
+                } else if (userData.user_type_id == 3) {
+                    // worker registered by worker provider
+                    return (await workerService.createWorker(userData));
                 }
                 console.log("plaaaaaaaaaaaaa");
                 console.log("is sent", isSent);
@@ -59,7 +61,7 @@ exports.createUser = async function (userData) {
                 console.log("return user");
                 return user;
                 // }
-            }else{
+            } else {
                 return false;
             }
         } catch (err) {

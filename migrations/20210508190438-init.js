@@ -245,12 +245,12 @@ module.exports = {
           key: 'user_id'
         }
       },
-      sevice_provider_location_id:{
+      service_provider_location_id:{
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'sevice_provider_location',
-          key: 'sevice_provider_location_id'
+          model: 'service_provider_location',
+          key: 'service_provider_location_id'
         }
       },
       is_available: {

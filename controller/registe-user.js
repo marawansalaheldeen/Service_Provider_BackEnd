@@ -20,7 +20,8 @@ module.exports.registerUser = async (req, res) => {
             contact_role: req.body.contact_role,
             city: req.body.city, 
             area: req.body.area, 
-            street: req.body.street
+            street: req.body.street,
+            service_provider_location_id: req.body.service_provider_location_id
         }
 
         const user = await User.createUser(userData);
