@@ -78,6 +78,10 @@ module.exports = {
       user_password: {
         type: Sequelize.STRING
       },
+      is_verified: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
+      },
       longitude: {
         type: Sequelize.STRING
       },
@@ -159,7 +163,7 @@ module.exports = {
       }
     });
 
-    await queryInterface.createTable('sevice_provider', {
+    await queryInterface.createTable('service_provider', {
       service_provider_id: {
         allowNull: false,
         autoIncrement: true,
@@ -193,7 +197,7 @@ module.exports = {
       }
     });
 
-    await queryInterface.createTable('sevice_provider_location', {
+    await queryInterface.createTable('service_provider_location', {
       service_provider_location_id: {
         allowNull: false,
         autoIncrement: true,
@@ -204,8 +208,8 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'sevice_provider',
-          key: 'sevice_provider_id'
+          model: 'service_provider',
+          key: 'service_provider_id'
         }
       },
       city: {
@@ -345,12 +349,12 @@ module.exports = {
           key: 'service_id'
         }
       },
-      sevice_provider_location_id:{
+      service_provider_location_id:{
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'sevice_provider_location',
-          key: 'sevice_provider_location_id'
+          model: 'service_provider_location',
+          key: 'service_provider_location_id'
         }
       },
       is_available: {
@@ -381,12 +385,12 @@ module.exports = {
           key: 'customer_id'
         }
       },
-      sevice_provider_location_id:{
+      service_provider_location_id:{
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'sevice_provider_location',
-          key: 'sevice_provider_location_id'
+          model: 'service_provider_location',
+          key: 'service_provider_location_id'
         }
       },
       service_id:{

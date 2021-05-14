@@ -11,6 +11,11 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             // define association here
+            
+            // 1 has many workers
+            ServiceProviderLocation.hasMany(models.Worker, {
+                foreignKey: "service_provider_location_id"
+            });
         }
     };
     ServiceProviderLocation.init({

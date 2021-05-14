@@ -2,7 +2,7 @@ const Cryptr = require('cryptr');
 const cryptr = new Cryptr('myTotalySecretKey');
 const nodemailer = require("nodemailer");
 
-const { sequelize, User } = require('../models');
+const { sequelize, User, Customer, ServiceProvider, Worker, ServiceProviderLocation } = require('../models');
 const custoemrService = require('./customer');
 const providerService = require('./service-provider');
 const workerService = require('./worker');
@@ -82,9 +82,61 @@ async function ifUserExist(user_email) {
         return false;
     } else {
         console.log(user instanceof User); // true
-        return true;
+        return user;
     }
 }
+
+async function getUserData(userData) {
+    // if (userData.user_type_id == 4) {
+    // Customer
+    const user = await User.findOne({
+        where:
+            { user_email: userData.user_email },
+        include: [
+            { model: Customer, as: 'Customer' },
+            { model: ServiceProvider, as: 'ServiceProvider' },
+            { model: Worker, as: 'Worker' }
+        ]
+    })
+
+    if (userData.user_type_id == 2) {
+        const service_providerId = user.ServiceProvider.service_provider_id;
+        const serviceProviderLocation = await ServiceProviderLocation.findOne({ where: { service_provider_id: service_providerId } });
+        user.serviceProviderLocation = serviceProviderLocation;
+        return user;
+    }
+    return user;
+}
+
+exports.userLogin = async (userData) => {
+    var ifExist = await ifUserExist(userData.user_email);
+
+    if (ifExist) {
+        console.log("plaaaaa");
+        const user = ifExist;
+        const decryptdPassword = cryptr.decrypt(user.user_password);
+        if (decryptdPassword == userData.user_password) {
+            // User login
+            // Get user data
+            console.log("entered to get user");
+            const user_data = await getUserData(user);
+            console.log("got user", user_data);
+            console.log("got user", user_data.serviceProviderLocation);
+            const allUserData = {
+                user: user_data,
+                serviceProviderLocation: user_data.serviceProviderLocation
+            }
+            return allUserData;
+
+        }else{
+            return false;
+        }
+    }else{
+        return false;
+    }
+}
+
+
 
 exports.transporter = nodemailer.createTransport({
     service: "gmail",
