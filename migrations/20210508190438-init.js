@@ -73,12 +73,12 @@ module.exports = {
         allowNull: false,
       },
       phone_number: {
-        type: Sequelize.BIGINT
+        type: Sequelize.STRING
       },
       user_password: {
         type: Sequelize.STRING
       },
-      is_verified: {
+      is_confirmed: {
         type: Sequelize.BOOLEAN,
         defaultValue: false
       },

@@ -51,6 +51,7 @@ const verifyRequestToken =(req,res,next)=>{
                     }
     
                 } else {
+                    console.log(decoded);
                     req.decoded = decoded;
                     next();
                 }

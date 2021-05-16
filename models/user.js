@@ -41,9 +41,9 @@ module.exports = (sequelize, DataTypes) => {
     user_first_name: DataTypes.STRING,
     user_last_name: DataTypes.STRING,
     user_email: DataTypes.STRING,
-    phone_number: DataTypes.INTEGER,
+    phone_number: DataTypes.STRING,
     user_password: DataTypes.STRING,
-    is_verified: DataTypes.BOOLEAN,
+    is_confirmed: DataTypes.BOOLEAN,
     longitude: DataTypes.INTEGER,
     latitude: DataTypes.INTEGER,
     created_at: {
