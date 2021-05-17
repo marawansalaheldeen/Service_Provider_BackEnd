@@ -1,5 +1,7 @@
-const register = require('./registe-user.js');
+const register = require('./registe-user');
+const login = require('./login');
 
 module.exports = {
-    register
+    register,
+    login
 }

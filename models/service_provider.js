@@ -11,6 +11,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      // 1 to 1 worker
+      ServiceProvider.hasOne(models.ServiceProviderLocation,{
+        foreignKey: "service_provider_id"
+      });
     }
   };
   ServiceProvider.init({
@@ -20,6 +24,7 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       type: DataTypes.INTEGER
     },
+    user_id: DataTypes.INTEGER,
     company_name: DataTypes.STRING,
     company_type: DataTypes.STRING,
     contact_role: DataTypes.STRING,

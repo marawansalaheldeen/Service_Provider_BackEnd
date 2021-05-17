@@ -14,7 +14,7 @@ const createToken = (userEmail) => {
 
 // verify token 
 const verifyToken = (token, callback) => {
-    jwt.verify(token, jwtKey.secret.secret, (err, decoded) => {
+    jwt.verify(token, "token-secret-key", (err, decoded) => {
         try {
             if (err) {
                 if (err.expiredAt) {
@@ -41,7 +41,7 @@ const verifyToken = (token, callback) => {
 const verifyRequestToken =(req,res,next)=>{
         let token = req.headers['x-access-token'];
         console.log(token);
-        jwt.verify(token, jwtKey.secret.secret, (err, decoded) => {
+        jwt.verify(token, "token-secret-key", (err, decoded) => {
             try {
                 if (err) {
                     if (err.expiredAt) {
@@ -51,6 +51,7 @@ const verifyRequestToken =(req,res,next)=>{
                     }
     
                 } else {
+                    console.log(decoded);
                     req.decoded = decoded;
                     next();
                 }

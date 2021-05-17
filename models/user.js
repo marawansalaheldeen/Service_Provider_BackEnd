@@ -4,7 +4,7 @@ const {
 } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
-  class user extends Model {
+  class User extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -12,9 +12,25 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+
+      // 1 to 1 customer
+      User.hasOne(models.Customer, {
+        foreignKey: "customer_id"
+      });
+
+      // 1 to 1 service provider 
+      User.hasOne(models.ServiceProvider,{
+        foreignKey: "user_id"
+      });
+      // 1 to 1 worker
+      User.hasOne(models.Worker,{
+        foreignKey: "user_id"
+      })
+
+      // User.belongsTo(models.Customer)
     }
   };
-  user.init({
+  User.init({
     user_id: {
       allowNull: false,
       autoIncrement: true,
@@ -25,8 +41,9 @@ module.exports = (sequelize, DataTypes) => {
     user_first_name: DataTypes.STRING,
     user_last_name: DataTypes.STRING,
     user_email: DataTypes.STRING,
-    phone_number: DataTypes.INTEGER,
+    phone_number: DataTypes.STRING,
     user_password: DataTypes.STRING,
+    is_confirmed: DataTypes.BOOLEAN,
     longitude: DataTypes.INTEGER,
     latitude: DataTypes.INTEGER,
     created_at: {
@@ -47,7 +64,9 @@ module.exports = (sequelize, DataTypes) => {
     updatedAt: false,
     freezeTableName: true
   });
-  return user;
+
+
+  return User;
 
   
 };

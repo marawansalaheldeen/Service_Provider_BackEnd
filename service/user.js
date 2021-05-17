@@ -1,12 +1,13 @@
 const Cryptr = require('cryptr');
 const cryptr = new Cryptr('myTotalySecretKey');
-const nodemailer = require("nodemailer");
 
-const { sequelize, User } = require('../models');
+const sendMailService = require('../utils/sendEmail');
+const { sequelize, User, Customer, ServiceProvider, Worker, ServiceProviderLocation } = require('../models');
 const custoemrService = require('./customer');
 const providerService = require('./service-provider');
 const workerService = require('./worker');
 const config = require('../config');
+const { resetPassword } = require('../controller/login');
 
 exports.createUser = async function (userData) {
     var ifExist = await ifUserExist(userData.user_email);
@@ -82,22 +83,74 @@ async function ifUserExist(user_email) {
         return false;
     } else {
         console.log(user instanceof User); // true
-        return true;
+        return user;
     }
 }
 
-exports.transporter = nodemailer.createTransport({
-    service: "gmail",
-    host: 'smtp.gmail.com',
-    port: 587,
-    secure: false,
-    rejectUnauthorized: false,
-    requireTLS: true,
-    auth: {
-        user: "onway012@gmail.com",
-        pass: "onway012!23"
+async function getUserData(userData) {
+
+    const user = await User.findOne({
+        where:
+            { user_email: userData.user_email },
+        include: [
+            { model: Customer, as: 'Customer' },
+            { model: ServiceProvider, as: 'ServiceProvider' },
+            { model: Worker, as: 'Worker' }
+        ]
+    })
+
+    if (userData.user_type_id == 2) {
+        const service_providerId = user.ServiceProvider.service_provider_id;
+        const serviceProviderLocation = await ServiceProviderLocation.findOne({ where: { service_provider_id: service_providerId } });
+        user.serviceProviderLocation = serviceProviderLocation;
+        return user;
     }
-})
+    return user;
+}
+
+exports.userLogin = async (userData) => {
+    var ifExist = await ifUserExist(userData.user_email);
+
+    if (ifExist) {
+        console.log("plaaaaa");
+        const user = ifExist;
+        const decryptdPassword = cryptr.decrypt(user.user_password);
+        if (decryptdPassword == userData.user_password) {
+            // User login
+            // Get user data
+            console.log("entered to get user");
+            const user_data = await getUserData(user);
+            console.log("got user", user_data);
+            console.log("got user", user_data.serviceProviderLocation);
+            const token = config.token.createToken(userData.user_email);
+            const allUserData = {
+                user: user_data,
+                serviceProviderLocation: user_data.serviceProviderLocation
+            }
+            allUserData.token = token;
+            return allUserData;
+
+        } else {
+            return false;
+        }
+    } else {
+        return false;
+    }
+}
+
+exports.confirmEmail = async (userEmail) => {
+    console.log("userEmail", userEmail);
+    const user = await User.findOne({ where: { user_email: userEmail } });
+    // console.log(user);
+    // Check if record exists in db
+    if (user) {
+        user.is_confirmed = true;
+        await user.save();
+        return ("email confirmed successfully");
+    } else {
+        return false;
+    }
+}
 
 const verifyEmail = async (email) => {
     console.log("entered sendmail")
@@ -106,7 +159,7 @@ const verifyEmail = async (email) => {
     console.log(token);
     let mailOptions = {
 
-        from: "On Way",
+        from: "ON WAY",
         to: email,
         subject: "🚛 On Way Verify Email 🚛",
         html: `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -171,20 +224,80 @@ const verifyEmail = async (email) => {
        </html>
        `
     }
-    await this.transporter.sendMail(mailOptions, (err, info) => {
-        console.log("tranmitted")
-        if (err) {
-            console.log(err)
-            console.log("email Error")
-            return false;
+
+    await sendMailService.sendMail(mailOptions);
+
+}
+
+exports.resetPasswordEmail = async (userEmail) => {
+    const user = ifUserExist(userEmail);
+    if(user){
+        const token = config.token.createToken(userEmail);
+
+        let mailOptions = {
+            from: "ON WAY",
+            to: userEmail,
+            subject: "🌻 On Way Password Reset 🌻",
+            html: `
+                <p style="
+                font-size: 17px;
+                padding: 10px 0;
+                line-height: 26px;
+                margin-left: 78px;
+                color: #000000;
+                font-weight: bold;
+              ">Hello From On Way team! </p>
+                <p style="
+                font-size: 14px;
+                line-height: 26px;
+                margin-left: 78px;
+                color: #000000;
+                font-weight: bold;
+              ">We heard that you forgot your On Way account password.</p>
+                <p style="
+                font-size: 14px;
+                line-height: 26px;
+                margin-left: 78px;
+                color: #000000;
+                font-weight: bold;
+              ">Don't worry! we got you.</p>
+                <p style="
+                font-size: 14px;
+                line-height: 26px;
+                margin-left: 78px;
+                color: #000000;
+                font-weight: bold;
+              ">click the button below and enter your new password</p>
+                <form action="http://localhost:3000/resetpsw/?tk=${token}">
+                    <input style="
+                    margin-left: 50%;
+                    color: #008000;
+                    font-weight: bold;
+                " type="submit" value="Change Password" />
+                </form>
+            `
         }
+        console.log(token);
+        const info = await sendMailService.sendMail(mailOptions);
+        console.log(info);
+    }else{
+        return false;
+    }
+    
+}
 
-        console.log(`** Email sent **`);
-        // return true;
-
-        console.log("Message sent: %s", info.messageId);
-        return info
-    })
-
-
+exports.changePassword = async (userData)=>{
+    console.log("req", userData.body);
+    const encryptdPassword = cryptr.encrypt(userData.body.user_password);
+    console.log(userData.decoded);
+    const user = await User.findOne({ where: { user_email: userData.decoded.issuer } });
+    // console.log(user);
+    // Check if record exists in db
+    if (user) {
+        user.user_password = encryptdPassword;
+        await user.save();
+        return ("password changed successfully");
+    } else {
+        return false;
+    }
 }
