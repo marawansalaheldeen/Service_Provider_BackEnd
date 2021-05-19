@@ -9,5 +9,6 @@ router.post('/login',isMailVerified, controller.login.userLogin);
 router.post('/confirmemail',verifyRequestToken, controller.login.confirmEmail);
 router.post('/resetpasswordemail', controller.login.resetPasswordEmail);
 router.post('/changepassword', verifyRequestToken, controller.login.changePassword);
+router.post('/updateworker',controller.worker.updateWorker);
 
 module.exports = router;
