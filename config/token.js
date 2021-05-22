@@ -40,7 +40,6 @@ const verifyToken = (token, callback) => {
 
 const verifyRequestToken =(req,res,next)=>{
         let token = req.headers['x-access-token'];
-        console.log(token);
         jwt.verify(token, "token-secret-key", (err, decoded) => {
             try {
                 if (err) {

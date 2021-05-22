@@ -2,7 +2,7 @@ const Cryptr = require('cryptr');
 const cryptr = new Cryptr('myTotalySecretKey');
 
 const sendMailService = require('../utils/sendEmail');
-const { sequelize, User, Customer, ServiceProvider, Worker, ServiceProviderLocation } = require('../models');
+const { sequelize, User, Customer, ServiceProvider, Worker, ServiceProviderLocation, Car } = require('../models');
 const custoemrService = require('./customer');
 const providerService = require('./service-provider');
 const workerService = require('./worker');
@@ -76,7 +76,7 @@ exports.createUser = async function (userData) {
 }
 
 async function ifUserExist(user_email) {
-    const user = await User.findOne({ where: { user_email: user_email } });
+    let user = await User.findOne({ where: { user_email: user_email } });
     console.log(user);
     if (user === null) {
         console.log('Not found!');
@@ -87,25 +87,35 @@ async function ifUserExist(user_email) {
     }
 }
 
-async function getUserData(userData) {
-
-    const user = await User.findOne({
+ async function getUserData (user_email) {
+    console.log("entered with email", user_email);
+    let user = await User.findOne({
         where:
-            { user_email: userData.user_email },
+            { user_email: user_email },
         include: [
-            { model: Customer, as: 'Customer' },
-            { model: ServiceProvider, as: 'ServiceProvider' },
+            {
+                model: Customer, as: 'Customer', include: [{
+                    model: Car
+                }]
+            },
+            {
+                model: ServiceProvider, as: 'ServiceProvider', include: [{
+                    model: ServiceProviderLocation
+                }]
+            },
             { model: Worker, as: 'Worker' }
         ]
     })
-
-    if (userData.user_type_id == 2) {
-        const service_providerId = user.ServiceProvider.service_provider_id;
-        const serviceProviderLocation = await ServiceProviderLocation.findOne({ where: { service_provider_id: service_providerId } });
-        user.serviceProviderLocation = serviceProviderLocation;
-        return user;
-    }
+    console.log("uuuuuuuuuuu", user);
     return user;
+}
+
+exports.getUser = async(userData)=>{
+    return await getUserData(userData);
+}
+
+exports.getAllUsers = async()=>{
+    return await User.findAll();
 }
 
 exports.userLogin = async (userData) => {
@@ -113,22 +123,42 @@ exports.userLogin = async (userData) => {
 
     if (ifExist) {
         console.log("plaaaaa");
-        const user = ifExist;
+        let user = ifExist;
         const decryptdPassword = cryptr.decrypt(user.user_password);
+        console.log(decryptdPassword);
+        console.log(userData.user_password);
         if (decryptdPassword == userData.user_password) {
             // User login
             // Get user data
             console.log("entered to get user");
-            const user_data = await getUserData(user);
-            console.log("got user", user_data);
-            console.log("got user", user_data.serviceProviderLocation);
-            const token = config.token.createToken(userData.user_email);
-            const allUserData = {
-                user: user_data,
-                serviceProviderLocation: user_data.serviceProviderLocation
+            let user_data = await getUserData(user.user_email);
+            // console.log("got user", user_data);
+            // console.log("got user", user_data.serviceProviderLocation);
+            const token = await config.token.createToken(userData.user_email);
+            // const allUserData = {
+            //     user: user_data,
+            //     serviceProviderLocation: user_data.serviceProviderLocation
+            // }
+            // user_data.token = token;
+            console.log(user_data);
+            const userr = {
+                user_id: user_data.user_id,
+                user_type_id: user_data.user_type_id,
+                user_first_name: user_data.user_first_name,
+                user_last_name: user_data.user_last_name,
+                user_email: user_data.user_email,
+                phone_number: user_data.phone_number,
+                longitude: user_data.longitude,
+                latitude: user_data.latitude,
+                created_at: user_data.created_at,
+                updated_at:user_data.updated_at,
+                Customer: user_data.Customer,
+                ServiceProvider: user_data.ServiceProvider,
+                Worker: user_data.Worker,
+                token: token
             }
-            allUserData.token = token;
-            return allUserData;
+            console.log("service prov", user_data);
+            return userr;
 
         } else {
             return false;
@@ -231,7 +261,7 @@ const verifyEmail = async (email) => {
 
 exports.resetPasswordEmail = async (userEmail) => {
     const user = ifUserExist(userEmail);
-    if(user){
+    if (user) {
         const token = config.token.createToken(userEmail);
 
         let mailOptions = {
@@ -280,13 +310,13 @@ exports.resetPasswordEmail = async (userEmail) => {
         console.log(token);
         const info = await sendMailService.sendMail(mailOptions);
         console.log(info);
-    }else{
+    } else {
         return false;
     }
-    
+
 }
 
-exports.changePassword = async (userData)=>{
+exports.changePassword = async (userData) => {
     console.log("req", userData.body);
     const encryptdPassword = cryptr.encrypt(userData.body.user_password);
     console.log(userData.decoded);

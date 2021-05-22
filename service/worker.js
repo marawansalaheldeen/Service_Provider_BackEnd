@@ -1,5 +1,4 @@
-const { sequelize, Worker } = require('../models');
-const { User } = require('../models');
+const { sequelize, Worker, User } = require('../models');
 
 exports.createWorker = async (userData)=>{
     const { user_id, service_provider_location_id } = userData;
@@ -21,7 +20,7 @@ exports.updateWorker = async (workerData)=>{
             where:{user_id}
         }
     )
-    User.update(
+    userr.update(
         {
             user_first_name,
             user_last_name,

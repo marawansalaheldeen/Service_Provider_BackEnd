@@ -1,7 +1,8 @@
 const loginService = require('../service/user');
 
-exports.userLogin = async(req, res)=>{
-    const user = await loginService.userLogin(req.body);
+exports.userLogin = async (req, res) => {
+    let user = await loginService.userLogin(req.body);
+    console.log(user);
     if (user == false) {
         res.status(400).send({ message: "incorrect username or password" });
     } else {
@@ -9,30 +10,49 @@ exports.userLogin = async(req, res)=>{
     }
 }
 
-exports.confirmEmail = async(req, res)=>{
+exports.confirmEmail = async (req, res) => {
     const isConfirmed = await loginService.confirmEmail(req.decoded.issuer);
-    if(!isConfirmed){
+    if (!isConfirmed) {
         res.status(400).send({ message: "resend confirmation mail" });
-    }else{
-        res.status(200).send({message: isConfirmed});
+    } else {
+        res.status(200).send({ message: isConfirmed });
     }
 }
 
-exports.resetPasswordEmail = async (req, res)=>{
+exports.resetPasswordEmail = async (req, res) => {
     const emailSent = await loginService.resetPasswordEmail(req.body.userEmail);
-    console.log("email sent", emailSent); 
-    if(emailSent == false){
+    console.log("email sent", emailSent);
+    if (emailSent == false) {
         res.status(400).send({ message: "invalid email" });
-    }else{
-        res.status(200).send({message: "change password message sent"});
+    } else {
+        res.status(200).send({ message: "change password message sent" });
     }
 }
 
-exports.changePassword = async(req, res)=>{
+exports.changePassword = async (req, res) => {
     const isPasswordChange = await loginService.changePassword(req);
-    if(!isPasswordChange){
+    if (!isPasswordChange) {
         res.status(400).send({ message: "error occuered" });
-    }else{
-        res.status(200).send({message: isPasswordChange});
+    } else {
+        res.status(200).send({ message: isPasswordChange });
     }
- }
+}
+
+exports.getUserData = async (req, res) => {
+    // console.log(req.body);
+    const user = await loginService.getUser(req.body.user_email);
+    if (!user) {
+        res.status(400).send({ message: "error occuered" });
+    } else {
+        res.status(200).send({ message: user });
+    }
+}
+
+exports.getAllUsers = async (req, res)=>{
+    const user = await loginService.getAllUsers();
+    if (!user) {
+        res.status(400).send({ message: "error occuered" });
+    } else {
+        res.status(200).send({ message: user });
+    }
+}

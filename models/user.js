@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
 
       // 1 to 1 customer
       User.hasOne(models.Customer, {
-        foreignKey: "customer_id"
+        foreignKey: "user_id"
       });
 
       // 1 to 1 service provider 

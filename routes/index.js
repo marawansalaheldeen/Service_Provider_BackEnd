@@ -10,5 +10,12 @@ router.post('/confirmemail',verifyRequestToken, controller.login.confirmEmail);
 router.post('/resetpasswordemail', controller.login.resetPasswordEmail);
 router.post('/changepassword', verifyRequestToken, controller.login.changePassword);
 router.post('/updateworker',controller.worker.updateWorker);
+router.post('/updatecustomer',verifyRequestToken, controller.customer.updateCustomer);
+// Get user 
+router.post('/user',verifyRequestToken, controller.login.getUserData);
+// Get all users
+router.get('/users',verifyRequestToken, controller.login.getAllUsers);
+router.post('/updatecar',verifyRequestToken, controller.customer.updateUserCar);
+router.get('/getservices',verifyRequestToken, controller.service.getAllService);
 
 module.exports = router;
