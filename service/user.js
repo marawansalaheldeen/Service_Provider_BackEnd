@@ -118,6 +118,16 @@ exports.getAllUsers = async()=>{
     return await User.findAll();
 }
 
+exports.getAllUsersByTypeId = async (userTypeId)=>{
+    const users = await User.findAll({
+        where: {
+            user_type_id: userTypeId
+        }
+    })
+
+    return users;
+}
+
 exports.userLogin = async (userData) => {
     var ifExist = await ifUserExist(userData.user_email);
 

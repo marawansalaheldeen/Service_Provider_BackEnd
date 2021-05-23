@@ -56,3 +56,12 @@ exports.getAllUsers = async (req, res)=>{
         res.status(200).send({ message: user });
     }
 }
+
+exports.getAllUsersByTypeId = async (req, res)=>{
+    const users = await loginService.getAllUsersByTypeId(req.body.user_type_id);
+    if (!users) {
+        res.status(400).send({ message: "error occuered" });
+    } else {
+        res.status(200).send({ message: users });
+    }
+}

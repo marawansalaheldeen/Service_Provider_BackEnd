@@ -23,9 +23,9 @@ module.exports.registerUser = async (req, res) => {
             street: req.body.street,
             service_provider_location_id: req.body.service_provider_location_id
         }
-
+        console.log("enteerd for worker");
         const user = await User.createUser(userData);
-        console.log("contoller", user);
+        // console.log("contoller", user);
         if (user == false) {
             res.status(400).send({ message: "incorrect username or password" });
         } else {

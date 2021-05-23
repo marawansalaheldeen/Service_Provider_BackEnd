@@ -2,6 +2,7 @@
 const {
   Model
 } = require('sequelize');
+const { worker } = require('../controller');
 module.exports = (sequelize, DataTypes) => {
   class Worker extends Model {
     /**
@@ -11,6 +12,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Worker.belongsTo(models.User,{
+        foreignKey: "user_id"
+      }
+        )
     }
   };
   Worker.init({

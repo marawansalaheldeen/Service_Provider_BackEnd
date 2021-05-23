@@ -17,5 +17,7 @@ router.post('/user',verifyRequestToken, controller.login.getUserData);
 router.get('/users',verifyRequestToken, controller.login.getAllUsers);
 router.post('/updatecar',verifyRequestToken, controller.customer.updateUserCar);
 router.get('/getservices',verifyRequestToken, controller.service.getAllService);
+router.post('/usersbyid',verifyRequestToken, controller.login.getAllUsersByTypeId);
+router.post('/workerbyid',verifyRequestToken, controller.worker.getWorkersByProviderId);
 
 module.exports = router;

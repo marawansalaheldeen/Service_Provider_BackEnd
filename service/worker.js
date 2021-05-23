@@ -34,3 +34,16 @@ exports.updateWorker = async (workerData)=>{
     console.log(userr);
     return userr
 }
+
+exports.getWorkersByProviderId = async(servieProviderLocation)=>{
+    const workers = await Worker.findAll({
+        where: {
+            service_provider_location_id: servieProviderLocation
+        },
+        include: [
+            { model: User, as: 'User' }
+        ]
+    })
+
+    return workers;
+}
