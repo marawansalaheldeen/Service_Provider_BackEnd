@@ -335,11 +335,19 @@ module.exports = {
     });
 
     await queryInterface.createTable('service_provider_service', {
-      fuel_category_id: {
+      service_provider_service_id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
+      },
+      fuel_category_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'fuel_category',
+          key: 'fuel_category_id'
+        }
       },
       service_id:{
         type: Sequelize.INTEGER,

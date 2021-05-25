@@ -114,6 +114,28 @@ exports.getUser = async(userData)=>{
     return await getUserData(userData);
 }
 
+exports.getUserById = async (user_id)=>{
+    let user = await User.findOne({
+        where:
+            { user_id : user_id },
+        include: [
+            {
+                model: Customer, as: 'Customer', include: [{
+                    model: Car
+                }]
+            },
+            {
+                model: ServiceProvider, as: 'ServiceProvider', include: [{
+                    model: ServiceProviderLocation
+                }]
+            },
+            { model: Worker, as: 'Worker' }
+        ]
+    })
+    console.log("uuuuuuuuuuu", user);
+    return user;
+}
+
 exports.getAllUsers = async()=>{
     return await User.findAll();
 }
