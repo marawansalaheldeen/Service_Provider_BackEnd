@@ -11,6 +11,7 @@ exports.userLogin = async (req, res) => {
 }
 
 exports.confirmEmail = async (req, res) => {
+    console.log("confirming email", req.decoded.issuer);
     const isConfirmed = await loginService.confirmEmail(req.decoded.issuer);
     if (!isConfirmed) {
         res.status(400).send({ message: "resend confirmation mail" });
@@ -26,6 +27,17 @@ exports.resetPasswordEmail = async (req, res) => {
         res.status(400).send({ message: "invalid email" });
     } else {
         res.status(200).send({ message: "change password message sent" });
+    }
+}
+
+exports.resendConfirmEmail = async(req, res)=>{
+    console.log("eneterd resend controller");
+    const isSent = await loginService.resendConfirmEmail(req.decoded.issuer);
+    console.log("is sent", isSent);
+    if (!isSent) {
+        res.status(400).send({ message: "resend confirmation mail" });
+    } else {
+        res.status(200).send({ message: "email sent successfully" });
     }
 }
 

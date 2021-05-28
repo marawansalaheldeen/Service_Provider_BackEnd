@@ -214,11 +214,18 @@ exports.confirmEmail = async (userEmail) => {
     }
 }
 
+exports.resendConfirmEmail = async(user_email)=>{
+    console.log("emaaaaaail  for resend confirm", user_email);
+    var isSent = await verifyEmail(user_email);
+    return true;
+}
+
 const verifyEmail = async (email) => {
     console.log("entered sendmail")
     //const emailTemplate = this.VerifyEmail(data)
     const token = config.token.createToken(email);
-    console.log(token);
+    console.log("token ",token);
+    console.log("email ",email);
     let mailOptions = {
 
         from: "ON WAY",
@@ -271,14 +278,11 @@ const verifyEmail = async (email) => {
        By clicking on the following link, you are confirming your email address.</p>
      
          </div>
-        
-         <form action="http://localhost:3000/confirm/?tk=${token}">
-            <input style="
-            margin-left: 50%;
+         <a style="
+         margin-left: 50%;
             color: #008000;
             font-weight: bold;
-          " type="submit" value="Confirm" />
-        </form>
+        " href="http://localhost:8120/EmailConfirmation/?tk=${token}" class="button">Confirm email address ✔️</a>
        </div>
 
     

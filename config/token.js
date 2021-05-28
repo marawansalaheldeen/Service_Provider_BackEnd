@@ -13,8 +13,10 @@ const createToken = (userEmail) => {
 }
 
 // verify token 
-const verifyToken = (token, callback) => {
-    jwt.verify(token, "token-secret-key", (err, decoded) => {
+const verifyToken = (req, res, next) => {
+    // console.log("eneterd verify token", );
+    console.log("eneterd verify token", req.body.token);
+    jwt.verify(req.body.token, "token-secret-key", (err, decoded) => {
         try {
             if (err) {
                 if (err.expiredAt) {
@@ -24,12 +26,13 @@ const verifyToken = (token, callback) => {
                 }
 
             } else {
-                callback("user Verified", decoded.issuer)
+                console.log("token verified");
+                req.decoded = decoded;
+                next()
+                // callback("user Verified", decoded.issuer)
             }
         } catch (err) {
-            requestHandler.HandleRequest(err, (result) => {
-                callback(result, " ");
-            })
+           console.log("err", err);
         }
 
     });
@@ -39,6 +42,7 @@ const verifyToken = (token, callback) => {
 
 
 const verifyRequestToken =(req,res,next)=>{
+    console.log("eneterd for token");
         let token = req.headers['x-access-token'];
         jwt.verify(token, "token-secret-key", (err, decoded) => {
             try {
@@ -46,6 +50,7 @@ const verifyRequestToken =(req,res,next)=>{
                     if (err.expiredAt) {
                         res.json('Token Expired');
                     } else {
+                        console.log("token un auth");
                         res.json('Token UnAuthorized');
                     }
     
