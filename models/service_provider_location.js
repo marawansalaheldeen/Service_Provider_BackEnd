@@ -16,6 +16,10 @@ module.exports = (sequelize, DataTypes) => {
             ServiceProviderLocation.hasMany(models.Worker, {
                 foreignKey: "service_provider_location_id"
             });
+
+            ServiceProviderLocation.hasMany(models.serviceProviderService, {
+                foreignKey: "service_provider_location_id"
+            });
         }
     };
     ServiceProviderLocation.init({

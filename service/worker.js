@@ -13,7 +13,7 @@ exports.createWorker = async (userData)=>{
 
 exports.updateWorker = async (workerData)=>{
     const { user_id, user_type_id,user_first_name,user_last_name,phone_number } = workerData;
-    console.log(user_id, user_type_id,user_first_name);
+    
 
     const userr = await User.findOne(
         {

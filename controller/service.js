@@ -8,3 +8,34 @@ exports.getAllService = async (req, res)=>{
         res.status(200).send({ message: services });
     }
 }
+
+exports.addService = async (req,res)=>{
+    const add_service = await serviceService.addService(req.body);
+
+    if (!add_service) {
+        res.status(400).send({ message: "error occuered" });
+    } else {
+        res.status(200).send({ message: add_service });
+    }
+}
+
+exports.getServiceByServiceId = async (req,res)=>{
+    const get_service_by_id = await serviceService.get_service_by_id(req.params.service_id);
+
+    if (!get_service_by_id) {
+        res.status(400).send({ message: "error occuered" });
+    } else {
+        res.status(200).send({ message: get_service_by_id });
+    }
+}
+
+
+exports.updateServiceById = async (req,res)=>{
+    const update_service_by_id = await serviceService.update_service_by_id(req.body);
+
+    if (!update_service_by_id) {
+        res.status(400).send({ message: "error occuered" });
+    } else {
+        res.status(200).send({ message: update_service_by_id });
+    }
+}
