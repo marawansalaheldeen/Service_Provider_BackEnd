@@ -14,6 +14,10 @@ module.exports = (sequelize, DataTypes) => {
             FuelCategory.belongsTo(models.Service,{
                 foreignKey: 'service_id'
             })
+
+            FuelCategory.hasMany(models.serviceProviderService,{
+                foreignKey: "fuel_category_id"
+            })
         }
     };
     FuelCategory.init({

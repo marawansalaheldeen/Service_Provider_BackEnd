@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class Service extends Model {
+  class service_provider_service extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -11,42 +11,51 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Service.hasMany(models.FuelCategory,{
-        foreignKey: 'service_id'
+      service_provider_service.belongsTo(models.FuelCategory,{
+        foreignKey: "fuel_category_id"
       })
 
-      Service.hasMany(models.serviceProviderService,{
-        foreignKey: 'service_id'
+      service_provider_service.belongsTo(models.Service,{
+        foreignKey: "service_id"
+      })
+
+      service_provider_service.belongsTo(models.ServiceProviderLocation,{
+        foreignKey: "service_provider_location_id"
       })
     }
   };
-  Service.init({
-    service_id: {
+  service_provider_service.init({
+    sps_id: {
       allowNull: false,
       autoIncrement: true,
       primaryKey: true,
       type: DataTypes.INTEGER
     },
-    service_name: DataTypes.STRING,
-    service_description: DataTypes.STRING,
-    service_price: DataTypes.DOUBLE,
-    created_at: {
+    fuel_category_id: {
+      allowNull:true,
+      type:DataTypes.INTEGER
+    },
+    service_id: DataTypes.INTEGER,
+    service_provider_location_id:DataTypes.INTEGER,
+    is_available:DataTypes.INTEGER,
+    created_at:{
       allowNull: false,
       type: DataTypes.DATE,
       defaultValue: sequelize.literal('CURRENT_TIMESTAMP')
     },
-    updated_at: {
+    updated_at:{
       allowNull: false,
       type: DataTypes.DATE,
       defaultValue: sequelize.literal('CURRENT_TIMESTAMP')
     }
+
   }, {
     sequelize,
-    modelName: 'Service',
-    tableName: 'service',
+    modelName: 'serviceProviderService',    
+    tableName: 'service_provider_service',
     createdAt: false,
     updatedAt: false,
     freezeTableName: true
   });
-  return Service;
+  return service_provider_service;
 };
