@@ -5,6 +5,11 @@ const config = require('./config');
 const routes = require('./routes');
 const db = require('./models');
 const control = require('./control.js');
+const socketio = require('socket.io');
+const http = require('http').createServer();
+const io = require('socket.io')(http, {
+    cors: { origin: "*"}
+})
 
 // Middlewares
 app.use(express.json());
@@ -38,9 +43,13 @@ db.sequelize
 // app.use('/api', routes);
 control(app)
 
+io.on('connection', (socket) => {
+    console.log("connection ....");
+    
+})
 
 const PORT = 3000 || config.PORT;
 
-app.listen(PORT, () => {
+http.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 })
