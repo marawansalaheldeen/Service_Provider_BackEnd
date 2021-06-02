@@ -28,24 +28,43 @@ exports.createUser = async function (userData) {
             longitude,
             latitude } = userData;
         try {
-            const user = await User.create({
-                user_first_name,
-                user_last_name,
-                phone_number,
-                user_region_id,
-                user_email,
-                user_password,
-                user_type_id,
-                longitude,
-                latitude
-            })
+            let is_confirmed = true;
+            let user = {};
+            if(user_type_id == 3){
+                user = await User.create({
+                    user_first_name,
+                    user_last_name,
+                    phone_number,
+                    user_region_id,
+                    user_email,
+                    user_password,
+                    is_confirmed,
+                    user_type_id,
+                    longitude,
+                    latitude
+                })
+            }else{
+                user = await User.create({
+                    user_first_name,
+                    user_last_name,
+                    phone_number,
+                    user_region_id,
+                    user_email,
+                    user_password,
+                    user_type_id,
+                    longitude,
+                    latitude
+                })
+            }
+           
             console.log("user", user.dataValues.user_id);
             if (user._options.isNewRecord) {
                 // send email with
+
                 var isSent = await verifyEmail(userData.user_email);
 
                 userData.user_id = user.dataValues.user_id;
-                // Worker
+                // Customer
                 if (userData.user_type_id == 4) {
                     console.log("entered for adding cust", userData.user_type_id);
                     return (await custoemrService.createCustomer(userData));
@@ -87,7 +106,7 @@ async function ifUserExist(user_email) {
     }
 }
 
- async function getUserData (user_email) {
+async function getUserData(user_email) {
     console.log("entered with email", user_email);
     let user = await User.findOne({
         where:
@@ -110,14 +129,14 @@ async function ifUserExist(user_email) {
     return user;
 }
 
-exports.getUser = async(userData)=>{
+exports.getUser = async (userData) => {
     return await getUserData(userData);
 }
 
-exports.getUserById = async (user_id)=>{
+exports.getUserById = async (user_id) => {
     let user = await User.findOne({
         where:
-            { user_id : user_id },
+            { user_id: user_id },
         include: [
             {
                 model: Customer, as: 'Customer', include: [{
@@ -136,11 +155,11 @@ exports.getUserById = async (user_id)=>{
     return user;
 }
 
-exports.getAllUsers = async()=>{
+exports.getAllUsers = async () => {
     return await User.findAll();
 }
 
-exports.getAllUsersByTypeId = async (userTypeId)=>{
+exports.getAllUsersByTypeId = async (userTypeId) => {
     const users = await User.findAll({
         where: {
             user_type_id: userTypeId
@@ -183,7 +202,7 @@ exports.userLogin = async (userData) => {
                 longitude: user_data.longitude,
                 latitude: user_data.latitude,
                 created_at: user_data.created_at,
-                updated_at:user_data.updated_at,
+                updated_at: user_data.updated_at,
                 Customer: user_data.Customer,
                 ServiceProvider: user_data.ServiceProvider,
                 Worker: user_data.Worker,
@@ -214,7 +233,7 @@ exports.confirmEmail = async (userEmail) => {
     }
 }
 
-exports.resendConfirmEmail = async(user_email)=>{
+exports.resendConfirmEmail = async (user_email) => {
     console.log("emaaaaaail  for resend confirm", user_email);
     var isSent = await verifyEmail(user_email);
     return true;
@@ -224,8 +243,8 @@ const verifyEmail = async (email) => {
     console.log("entered sendmail")
     //const emailTemplate = this.VerifyEmail(data)
     const token = config.token.createToken(email);
-    console.log("token ",token);
-    console.log("email ",email);
+    console.log("token ", token);
+    console.log("email ", email);
     let mailOptions = {
 
         from: "ON WAY",

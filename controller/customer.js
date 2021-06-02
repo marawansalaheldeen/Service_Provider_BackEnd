@@ -17,3 +17,12 @@ exports.updateUserCar = async (req, res)=>{
         res.status(200).send(car);
     }
 } 
+
+exports.requestCustomerService = async (req, res)=>{
+    const availableServices = await customerService.requestCustomerService(req.body);
+    if (availableServices == false) {
+        res.status(400).send({ message: "incorrect data" });
+    } else {
+        res.status(200).send({message: availableServices});
+    }
+}

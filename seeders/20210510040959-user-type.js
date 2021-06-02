@@ -13,18 +13,22 @@ module.exports = {
     */
 
     await queryInterface.bulkInsert('user_type', [{
+      user_type_id: 1,
       user_type: 'Adminstrator',
       created_at: new Date(),
       updated_at: new Date()
     }, {
+      user_type_id: 2,
       user_type: 'Service Provider',
       created_at: new Date(),
       updated_at: new Date()
     },{
+      user_type_id: 3,
       user_type: 'Worker',
       created_at: new Date(),
       updated_at: new Date()
     }, {
+      user_type_id: 4,
       user_type: 'Customer',
       created_at: new Date(),
       updated_at: new Date()
