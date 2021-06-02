@@ -28,6 +28,6 @@ router.post('/addservice',verifyRequestToken,controller.service.addService);
 router.get('/getservicebyid/:service_id',verifyRequestToken,controller.service.getServiceByServiceId);
 router.post('/updateservicebyid',verifyRequestToken,controller.service.updateServiceById);
 
-
+router.post('/customer/closestproviders',verifyRequestToken, controller.customer.requestCustomerService);
 
 module.exports = router;

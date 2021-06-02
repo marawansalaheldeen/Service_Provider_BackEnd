@@ -68,3 +68,27 @@ exports.updateUserCar = async (carData)=>{
     // console.log(userr);
     return car;
 }
+
+exports.requestCustomerService = async (cutomerData)=>{
+    const lat = cutomerData.latitude;
+    const long = cutomerData.longitude;
+    // get the closest service providers and send them request
+    const availableProviders = await sequelize.query(`SELECT * ,(6371 * acos(cos( radians( ${lat} ) ) * cos( radians(latitude)) * 
+        cos( radians(longitude) - radians ( ${long} ) ) + sin( radians( ${lat} ))  * 
+        sin(radians(latitude))   )) AS distance_in_km 
+        FROM user u
+        INNER JOIN service_provider s
+        ON s.user_id = u.user_id
+        INNER JOIN service_provider_location l
+        ON l.service_provider_id = s.service_provider_id
+        INNER JOIN service_provider_service p
+        ON p.service_provider_location_id = l.service_provider_location_id
+        AND p.service_id = 10  
+        HAVING distance_in_km < 30 
+        ORDER BY distance_in_km 
+        LIMIT 0, 30 `,
+     { type: QueryTypes.SELECT });
+
+     console.log("availableProviders", availableProviders); 
+
+}
