@@ -2,7 +2,7 @@
 const {
   Model
 } = require('sequelize');
-const { worker } = require('../controller');
+// const { worker } = require('../controller');
 module.exports = (sequelize, DataTypes) => {
   class Worker extends Model {
     /**

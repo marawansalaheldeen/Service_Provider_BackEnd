@@ -1,4 +1,4 @@
-const { sequelize, Service, FuelCategory , serviceProviderService , ServiceProviderLocation} = require('../models');
+const { Service, FuelCategory , serviceProviderService , ServiceProviderLocation} = require('../models');
 
 exports.getAllService = async ()=>{
     return await Service.findAll({

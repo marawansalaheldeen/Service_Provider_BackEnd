@@ -2,14 +2,34 @@ const express = require('express');
 app = express();
 const cors = require("cors");
 const config = require('./config');
-const routes = require('./routes');
+// const routes = require('./routes');
 const db = require('./models');
 const control = require('./control.js');
-const socketio = require('socket.io');
-const http = require('http').createServer();
-const io = require('socket.io')(http, {
-    cors: { origin: "*"}
-})
+// const http = require('http').createServer();
+// const io = require('socket.io')(http, {
+//     cors: {origin: "*"}
+// })
+
+
+
+// io.on('connection', (socket)=>{
+//     console.log('user is connected ...');
+//     console.log(socket.id);
+//     socket.on('connect', (socket)=>{
+//         const sessionID = socket.id;
+//         console.log(socket.id);
+//     })
+//    // io.to(socket.id).emit("this is a message from server");
+//     io.to(socket.id).emit('message', 'welcome to on way')
+//     // io.to(socketId).emit(/* ... */);
+
+// })
+
+
+
+// const { messaging} = require('./utils/pushNotification');
+
+// console.log(messaging);
 
 // Middlewares
 app.use(express.json());
@@ -43,13 +63,9 @@ db.sequelize
 // app.use('/api', routes);
 control(app)
 
-io.on('connection', (socket) => {
-    console.log("connection ....");
-    
-})
 
 const PORT = 3000 || config.PORT;
 
-http.listen(PORT, () => {
+app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 })

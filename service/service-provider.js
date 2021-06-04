@@ -1,4 +1,4 @@
-const { sequelize, ServiceProvider } = require('../models');
+const { ServiceProvider } = require('../models');
 const providerLocation = require('./service-provider-location');
 
 module.exports.createServiceProvider = async (userData) => {

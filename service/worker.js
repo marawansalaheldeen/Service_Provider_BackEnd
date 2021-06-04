@@ -1,4 +1,4 @@
-const { sequelize, Worker, User } = require('../models');
+const {  Worker, User } = require('../models');
 
 exports.createWorker = async (userData)=>{
     const { user_id, service_provider_location_id } = userData;
