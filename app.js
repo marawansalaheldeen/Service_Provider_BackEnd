@@ -5,18 +5,20 @@ const config = require('./config');
 // const routes = require('./routes');
 const db = require('./models');
 const control = require('./control.js');
-const http = require('http');
-const socketio = require('socket.io');
-
 app = express();
-const server = http.createServer(app)
-const io = socketio(server)
+
+const http = require('http').createServer(app);
+const io = require('socket.io')(http, {
+    cors: {
+        origin: "*",
+        methods: ["GET", "POST"]
+      }
+});
+
+// const server = http.createServer(app)
+// const io = socketio(server)
 
 // socket connection
-
-io.on('connection',(socket)=>{
-    console.log("socket connected");
-})
 // const http = require('http').createServer();
 // const io = require('socket.io')(http, {
 //     cors: {origin: "*"}
@@ -75,11 +77,23 @@ db.sequelize
     .catch((err) => console.log("error", err));
 
 // app.use('/api', routes);
+
+io.on('connection',(socket)=>{
+    console.log("socket connected");
+    // console.log("req", req.body);
+    socket.on('provider', (data)=>{
+        console.log(data);
+        console.log(socket.id);
+
+    })
+})
+app.set('socketio', io);
+
 control(app)
 
 
 const PORT = 3000 || config.PORT;
 
-app.listen(PORT, () => {
+http.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 })

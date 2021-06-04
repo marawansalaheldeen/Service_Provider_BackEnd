@@ -4,7 +4,6 @@ const controller = require('../controller');
 const { verifyRequestToken, verifyToken } = require('../config/token');
 const { isMailVerified } = require('../middleware/isMailConfirmed');
 
-
 router.post('/signup', controller.register.registerUser);
 router.post('/login',isMailVerified, controller.login.userLogin);
 router.post('/confirmemail',verifyToken, controller.login.confirmEmail);
@@ -30,4 +29,7 @@ router.post('/updateservicebyid',verifyRequestToken,controller.service.updateSer
 
 router.post('/customer/closestproviders',verifyRequestToken, controller.customer.requestCustomerService);
 router.get('/workers/getavailableworkers', controller.worker.getAvailabbleWorkersBySPL);
+
+router.post('/setsocketid', controller.servicecProvider.serSocketUSerId);
+
 module.exports = router;
