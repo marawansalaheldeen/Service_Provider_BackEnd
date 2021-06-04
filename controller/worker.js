@@ -19,3 +19,14 @@ exports.getWorkersByProviderId = async (req, res)=>{
         res.status(200).send({ message: workers });
     }
 }
+
+exports.getAvailabbleWorkersBySPL = async (req, res)=>{
+    
+    const available_workers = await workerService.getAvailabbleWorkersBySPL(req.body.service_provider_location_id);
+    
+    if (!available_workers) {
+        res.status(400).send({ message: "error occuered" });
+    } else {
+        res.status(200).send({ message: available_workers });
+    }
+}
