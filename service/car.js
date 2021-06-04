@@ -1,4 +1,4 @@
-const { sequelize, Car } = require('../models');
+const { Car } = require('../models');
 
 module.exports.createCustomerCar= async(userData)=>{
     console.log("entered car service");

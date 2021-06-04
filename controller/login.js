@@ -1,6 +1,7 @@
 const loginService = require('../service/user');
 
 exports.userLogin = async (req, res) => {
+    console.log(req.body);
     let user = await loginService.userLogin(req.body);
     console.log(user);
     if (user == false) {

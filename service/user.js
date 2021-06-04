@@ -2,12 +2,12 @@ const Cryptr = require('cryptr');
 const cryptr = new Cryptr('myTotalySecretKey');
 
 const sendMailService = require('../utils/sendEmail');
-const { sequelize, User, Customer, ServiceProvider, Worker, ServiceProviderLocation, Car } = require('../models');
+const {  User, Customer, ServiceProvider, Worker, ServiceProviderLocation, Car } = require('../models');
 const custoemrService = require('./customer');
 const providerService = require('./service-provider');
 const workerService = require('./worker');
 const config = require('../config');
-const { resetPassword } = require('../controller/login');
+// const { resetPassword } = require('../controller/login');
 
 exports.createUser = async function (userData) {
     var ifExist = await ifUserExist(userData.user_email);
