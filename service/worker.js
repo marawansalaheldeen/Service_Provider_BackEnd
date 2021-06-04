@@ -47,3 +47,17 @@ exports.getWorkersByProviderId = async(servieProviderLocation)=>{
 
     return workers;
 }
+
+exports.getAvailabbleWorkersBySPL = async(servieProviderLocation)=>{
+    const availble_worker = await Worker.findAll({
+        where: {
+            service_provider_location_id: servieProviderLocation,
+            is_available:1
+        },
+        include: [
+            { model: User, as: 'User' }
+        ]
+    })
+
+    return availble_worker;
+}

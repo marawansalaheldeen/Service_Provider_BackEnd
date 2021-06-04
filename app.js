@@ -1,14 +1,28 @@
 const express = require('express');
-app = express();
+
 const cors = require("cors");
 const config = require('./config');
 const routes = require('./routes');
 const db = require('./models');
 const control = require('./control.js');
+const http = require('http');
+const socketio = require('socket.io');
+
+app = express();
+const server = http.createServer(app)
+const io = socketio(server)
+
+// socket connection
+
+io.on('connection',(socket)=>{
+    console.log("socket connected");
+})
 
 // Middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+
 
 // Enable cors
 var corsOptions = {

@@ -24,10 +24,10 @@ router.post('/workerbyid',verifyRequestToken, controller.worker.getWorkersByProv
 router.post('/userbyid',verifyRequestToken, controller.login.getUserById);
 
 //services
-router.post('/addservice',verifyRequestToken,controller.service.addService);
+router.post('/addservice',controller.service.addService);
 router.get('/getservicebyid/:service_id',verifyRequestToken,controller.service.getServiceByServiceId);
 router.post('/updateservicebyid',verifyRequestToken,controller.service.updateServiceById);
 
 router.post('/customer/closestproviders',verifyRequestToken, controller.customer.requestCustomerService);
-
+router.get('/workers/getavailableworkers', controller.worker.getAvailabbleWorkersBySPL);
 module.exports = router;

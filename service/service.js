@@ -21,11 +21,12 @@ exports.addService = async (serviceData)=>{
     return sps;
 }
 
-exports.get_service_by_id = async (service_id)=>{
+exports.get_service_by_id = async (service_provider_location_id)=>{
 
     return await serviceProviderService.findAll({
         where:{
-            service_id:service_id
+            service_provider_location_id
+        
         },
         include: [
             {

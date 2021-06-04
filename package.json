@@ -26,6 +26,7 @@
     "nodemailer": "^6.6.0",
     "nodemon": "^2.0.7",
     "sequelize": "^6.6.2",
-    "sequelize-cli": "^6.2.0"
+    "sequelize-cli": "^6.2.0",
+    "socket.io": "^4.1.2"
   }
 }
