@@ -19,7 +19,8 @@ exports.updateUserCar = async (req, res)=>{
 } 
 
 exports.requestCustomerService = async (req, res)=>{
-    const availableServices = await customerService.requestCustomerService(req.body);
+    var io = req.app.get('socketio');
+    const availableServices = await customerService.requestCustomerService(req.body, io);
     if (availableServices == false) {
         res.status(400).send({ message: "incorrect data" });
     } else {

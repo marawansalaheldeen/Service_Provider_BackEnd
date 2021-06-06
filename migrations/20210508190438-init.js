@@ -82,6 +82,9 @@ module.exports = {
         type: Sequelize.BOOLEAN,
         defaultValue: false
       },
+      socket_id:{
+        type: Sequelize.STRING
+      },
       longitude: {
         type: Sequelize.STRING
       },
@@ -389,16 +392,16 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'customer',
-          key: 'customer_id'
+          model: 'user',
+          key: 'user_id'
         }
       },
       service_provider_location_id:{
         type: Sequelize.INTEGER,
-        allowNull: false,
+        allowNull: true,
         references: {
-          model: 'service_provider_location',
-          key: 'service_provider_location_id'
+          model: 'user',
+          key: 'user_id'
         }
       },
       service_id:{
@@ -409,16 +412,24 @@ module.exports = {
           key: 'service_id'
         }
       },
+      fuel_category_id: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        references: {
+          model: 'fuel_category',
+          key: 'fuel_category_id'
+        }
+      },
       request_status: {
         type: Sequelize.STRING,
         defaultValue: 'Pending'
       },
       worker_id:{
         type: Sequelize.INTEGER,
-        allowNull: false,
+        allowNull: true,
         references: {
-          model: 'worker',
-          key: 'worker_id'
+          model: 'user',
+          key: 'user_id'
         }
       },
       total_price: {

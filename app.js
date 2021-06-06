@@ -12,7 +12,7 @@ const io = require('socket.io')(http, {
     cors: {
         origin: "*",
         methods: ["GET", "POST"]
-      }
+    }
 });
 
 // const server = http.createServer(app)
@@ -70,7 +70,7 @@ app.all('', function (req, res, next) {
 db.sequelize
     .sync({
         // force: config.NODE_ENV === 'development' ? true : false
-        force:  false 
+        force: false
         // console.log("database connected");
     })
     .then(() => console.log("DB connected"))
@@ -78,15 +78,34 @@ db.sequelize
 
 // app.use('/api', routes);
 
-io.on('connection',(socket)=>{
+io.on('connection', (socket) => {
     console.log("socket connected");
-    // console.log("req", req.body);
-    socket.on('provider', (data)=>{
+    console.log(socket.id);
+    // socket.on('message', () => {
+    //     socket.emit('message', 'hello new client')
+
+        // io.to(socket.id).emit('message', 'welcome to on way')
+    // })
+    socket.on('provider', async(data)=>{
         console.log(data);
         console.log(socket.id);
+        const user = await db.User.findOne(
+            {
+                where:{user_id: data.user_id}
+            }
+        )
+        console.log("user found", user);
+        user.update({
+            socket_id: socket.id,
+            where:{
+                user_id: data.user_id
+            }
+        })
 
     })
-})
+    // console.log(socket.id);
+});
+
 app.set('socketio', io);
 
 control(app)

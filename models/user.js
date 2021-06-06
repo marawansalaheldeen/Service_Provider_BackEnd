@@ -46,6 +46,7 @@ module.exports = (sequelize, DataTypes) => {
     is_confirmed: DataTypes.BOOLEAN,
     longitude: DataTypes.INTEGER,
     latitude: DataTypes.INTEGER,
+    socket_id: DataTypes.STRING,
     created_at: {
       allowNull: false,
       type: DataTypes.DATE,

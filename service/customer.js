@@ -1,4 +1,5 @@
-const { sequelize, Customer, User, Car } = require('../models');
+const { sequelize, Customer, User, Car, Request } = require('../models');
+const { QueryTypes } = require('sequelize');
 const carService = require('./car');
 
 module.exports.createCustomer = async (userData) => {
@@ -69,7 +70,7 @@ exports.updateUserCar = async (carData)=>{
     return car;
 }
 
-exports.requestCustomerService = async (cutomerData)=>{
+exports.requestCustomerService = async (cutomerData, io)=>{
     const lat = cutomerData.latitude;
     const long = cutomerData.longitude;
     // get the closest service providers and send them request
@@ -83,12 +84,20 @@ exports.requestCustomerService = async (cutomerData)=>{
         ON l.service_provider_id = s.service_provider_id
         INNER JOIN service_provider_service p
         ON p.service_provider_location_id = l.service_provider_location_id
-        AND p.service_id = 10  
-        HAVING distance_in_km < 30 
+        AND p.service_id = 4  
+        HAVING distance_in_km < 50 
         ORDER BY distance_in_km 
-        LIMIT 0, 30 `,
+        LIMIT 0, 50`,
      { type: QueryTypes.SELECT });
 
-     console.log("availableProviders", availableProviders); 
+     console.log("availableProviders", availableProviders);
+     
+     console.log("the io",io);
+     console.log("socket", availableProviders[0].socket_id);
+     availableProviders.forEach(provider => {
+        console.log("v", provider);
+        io.to(provider.socket_id).emit('message', `A Customer request place and data, ${lat}, ${long}`)
+     })
+     
 
 }
