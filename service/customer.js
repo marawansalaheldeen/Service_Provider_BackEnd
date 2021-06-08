@@ -1,4 +1,4 @@
-const { sequelize, Customer, User, Car, Request } = require('../models');
+const { sequelize, Customer, User, Car, Request, RequestServiceProvider } = require('../models');
 const { QueryTypes } = require('sequelize');
 const carService = require('./car');
 
@@ -45,7 +45,7 @@ exports.updateCustomer = async (customerData) => {
     return userr
 }
 
-exports.updateUserCar = async (carData)=>{
+exports.updateUserCar = async (carData) => {
     const { customer_car_id, car_maker, car_model, car_license } = carData;
     console.log(customer_car_id, car_maker, car_model, car_license);
 
@@ -57,8 +57,8 @@ exports.updateUserCar = async (carData)=>{
     console.log("car", car);
     car.update(
         {
-            car_maker, 
-            car_model, 
+            car_maker,
+            car_model,
             car_license
 
         },
@@ -70,9 +70,73 @@ exports.updateUserCar = async (carData)=>{
     return car;
 }
 
-exports.requestCustomerService = async (cutomerData, io)=>{
+const createRequest = async (requestData) => {
+    console.log("req data", requestData);
+    const {
+        customer_id,
+        service_id,
+        fuel_category_id,
+        total_price
+    } = requestData;
+    const request = await Request.create({
+        customer_id,
+        service_id,
+        fuel_category_id,
+        total_price
+    });
+    console.log("req", request);
+    requestData.request_id = request.dataValues.request_id;
+    if (request._options.isNewRecord) {
+        return requestData;
+        // // Insert customer car
+        // return (await carService.createCustomerCar(userData));
+    } else {
+        console.log("error in creation customer");
+    }
+}
+
+const setClosestServiceProviderToCustomer = async (serviceProviders, request_id) => {
+    // const {
+    //     request_id,
+    //     service_provider_location_id
+    // } = requestData;
+    // const reqeustProvider = await RequestServiceProvider.create({
+    //     request_id,
+    //     service_provider_location_id
+    // });
+    // console.log("reqeustProvider", reqeustProvider);
+    // requestData.request_sp_id = reqeustProvider.dataValues.request_sp_id;
+    // if (reqeustProvider._options.isNewRecord) {
+    //     return requestData;
+    //     // // Insert customer car
+    //     // return (await carService.createCustomerCar(userData));
+    // } else {
+    //     console.log("error in creation customer");
+    // }
+    console.log("req for each provider", request_id);
+
+    return serviceProviders.forEach(async provider => {
+        console.log("provider", provider);
+        let reqeustProvider = await RequestServiceProvider.create({
+            request_id: request_id,
+            service_provider_location_id: provider.service_provider_location_id
+        });
+    });
+
+    // RequestServiceProvider.bulkCreate(values, { returning: true })
+    //     .then(function (response) {
+    //         console.log(response);
+    //     })
+    //     .catch(function (error) {
+    //         console.log(error);
+    //     })
+}
+
+exports.requestCustomerService = async (cutomerData, io) => {
     const lat = cutomerData.latitude;
     const long = cutomerData.longitude;
+    // create request 
+    const requestData = await createRequest(cutomerData);
     // get the closest service providers and send them request
     const availableProviders = await sequelize.query(`SELECT * ,(6371 * acos(cos( radians( ${lat} ) ) * cos( radians(latitude)) * 
         cos( radians(longitude) - radians ( ${long} ) ) + sin( radians( ${lat} ))  * 
@@ -88,16 +152,28 @@ exports.requestCustomerService = async (cutomerData, io)=>{
         HAVING distance_in_km < 50 
         ORDER BY distance_in_km 
         LIMIT 0, 50`,
-     { type: QueryTypes.SELECT });
+        { type: QueryTypes.SELECT });
 
-     console.log("availableProviders", availableProviders);
-     
-     console.log("the io",io);
-     console.log("socket", availableProviders[0].socket_id);
-     availableProviders.forEach(provider => {
+    console.log("availableProviders", availableProviders);
+    // set available providers in database 
+    await setClosestServiceProviderToCustomer(availableProviders, requestData.request_id);
+    console.log("the io", io);
+    let obj = {
+        request_id: requestData.request_id,
+        customer_id: cutomerData.customer_id,
+        user_first_name: customerData.user_first_name,
+        user_last_name: customerData.user_last_name,
+        phone_number: customerData.phone_number,
+        is_confirmed: customerData.is_confirmed,
+        car_maker: customerData.car_maker,
+        car_model: customerData.car_model,
+        car_license: customerData.car_license,
+        cut_lat: lat,
+        cust_lng: long
+    }
+    console.log("socket", availableProviders[0].socket_id);
+    availableProviders.forEach(provider => {
         console.log("v", provider);
-        io.to(provider.socket_id).emit('message', `A Customer request place and data, ${lat}, ${long}`)
-     })
-     
-
+        io.to(provider.socket_id).emit('message', {obj})
+    })
 }

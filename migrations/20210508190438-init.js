@@ -337,6 +337,43 @@ module.exports = {
       }
     });
 
+    await queryInterface.createTable('request_service_provider', {
+      request_sp_id: {
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
+        type: Sequelize.INTEGER
+      },
+      request_id:{
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'request',
+          key: 'request_id'
+        }
+      },
+      service_provider_location_id:{
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'service_provider_location',
+          key: 'service_provider_location_id'
+        }
+      },
+      request_status: {
+        type: Sequelize.STRING,
+        defaultValue: 'Pending'
+      },
+      created_at: {
+        allowNull: false,
+        type: Sequelize.DATE
+      },
+      updated_at: {
+        allowNull: false,
+        type: Sequelize.DATE
+      }
+    });
+
     await queryInterface.createTable('service_provider_service', {
       sps_id: {
         allowNull: false,

@@ -6,7 +6,7 @@
   "scripts": {
     "create-db": "npx sequelize-cli db:create",
     "migrate": "npx sequelize-cli db:migrate",
-    "make-seed": "npx sequelize-cli seed:generate --name user-type",
+    "make-seed": "npx sequelize-cli seed:generate --name service_provider_location",
     "seed": "npx sequelize-cli db:seed:all",
     "rm-last-mig": "npx sequelize-cli db:migrate:undo",
     "test": "echo \"Error: no test specified\" && exit 1",
