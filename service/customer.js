@@ -148,7 +148,7 @@ exports.requestCustomerService = async (cutomerData, io) => {
         ON l.service_provider_id = s.service_provider_id
         INNER JOIN service_provider_service p
         ON p.service_provider_location_id = l.service_provider_location_id
-        AND p.service_id = 4  
+        AND p.service_id = ${cutomerData.service_id}  
         HAVING distance_in_km < 50 
         ORDER BY distance_in_km 
         LIMIT 0, 50`,

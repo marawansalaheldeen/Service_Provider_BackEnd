@@ -21,3 +21,13 @@ exports.rejectingCustomerRequest = async (req, res)=>{
         res.status(200).send({message: "request rejected"});
     }
 }
+
+exports.changeServiceStatus = async (req, res)=>{
+    const isUpdated = await serviceProviderLocation.changeServiceStatus(req.body);
+    console.log("isUpdated", isUpdated);
+    if (!isUpdated) {
+        res.status(400).send({ message: "incorrect data" });
+    } else {
+        res.status(200).send({message: "status updated"});
+    }
+}

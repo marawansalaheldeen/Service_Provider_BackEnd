@@ -32,6 +32,7 @@ router.get('/workers/getavailableworkers', controller.worker.getAvailabbleWorker
 
 router.post('/setsocketid', controller.servicecProvider.serSocketUSerId);
 
-router.post('/provider/rejectrequest', controller.servicecProvider.rejectingCustomerRequest)
+router.post('/provider/rejectrequest', controller.servicecProvider.rejectingCustomerRequest);
+router.post('/provider/sesrvicestatus', controller.servicecProvider.changeServiceStatus);
 
 module.exports = router;
