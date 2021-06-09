@@ -20,6 +20,25 @@ module.exports = {
       status: 'In_Active',
       created_at: new Date(),
       updated_at: new Date()
+    }],[{
+      service_provider_location_id: 2,
+      service_provider_id: 2,
+      city: 'Alexandria',
+      area: 'سيدي جابر',
+      street: '4 توت عنخ امون، St، سيدي جابر، الإسكندرية',
+      status: 'In_Active',
+      created_at: new Date(),
+      updated_at: new Date()
+    }],
+    [{
+      service_provider_location_id: 3,
+      service_provider_id: 3,
+      city: 'Alexandria',
+      area: 'سيدي جابر',
+      street: '33 توت عنخ امون، الرياضة، سيدي جابر، الإسكندرية',
+      status: 'In_Active',
+      created_at: new Date(),
+      updated_at: new Date()
     }], {})
   },
 
