@@ -3,7 +3,7 @@ const {
     Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-    class request_service_provider extends Model {
+    class RequestServiceProvider extends Model {
         /**
          * Helper method for defining associations.
          * This method is not a part of Sequelize lifecycle.
@@ -13,16 +13,16 @@ module.exports = (sequelize, DataTypes) => {
             // define association here
             
             // 1 has many workers
-            request_service_provider.hasOne(models.Request, {
+            RequestServiceProvider.belongsTo(models.Request, {
                 foreignKey: "request_id"
             });
 
-            request_service_provider.hasMany(models.ServiceProviderLocation, {
+            RequestServiceProvider.belongsTo(models.ServiceProviderLocation, {
                 foreignKey: "service_provider_location_id"
             });
         }
     };
-    request_service_provider.init({
+    RequestServiceProvider.init({
         request_sp_id: {
             allowNull: false,
             autoIncrement: true,
@@ -53,5 +53,5 @@ module.exports = (sequelize, DataTypes) => {
         updatedAt: false,
         freezeTableName: true
     });
-    return request_service_provider;
+    return RequestServiceProvider;
 };

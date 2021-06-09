@@ -11,15 +11,28 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             // define association here
-            
-            // 1 has many workers
-            // ServiceProviderLocation.hasMany(models.Worker, {
-            //     foreignKey: "service_provider_location_id"
-            // });
 
-            // ServiceProviderLocation.hasMany(models.serviceProviderService, {
-            //     foreignKey: "service_provider_location_id"
-            // });
+            // 1 has many workers
+            Request.belongsTo(models.Worker, {
+                foreignKey: "worker_id"
+            });
+
+            Request.belongsTo(models.ServiceProviderLocation, {
+                foreignKey: "service_provider_location_id"
+            });
+
+            Request.belongsTo(models.Customer, { 
+                foreignKey: "customer_id"
+            })
+
+            Request.belongsTo(models.Service,{
+                foreignKey: "service_id"
+            })
+
+            Request.belongsTo(models.FuelCategory,{
+                foreignKey: 'fuel_category_id'
+              })
+
         }
     };
     Request.init({

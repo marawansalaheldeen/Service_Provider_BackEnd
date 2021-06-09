@@ -1,4 +1,4 @@
-
+const serviceProviderLocation = require('../service/service-provider-location');
 
 exports.serSocketUSerId = (req, res) => {
     var io = req.app.get('socketio');
@@ -11,4 +11,13 @@ exports.serSocketUSerId = (req, res) => {
     
         })
     })
+}
+
+exports.rejectingCustomerRequest = async (req, res)=>{
+    const isRejectes = await serviceProviderLocation.rejectingCustomerRequest(req.body);
+    if (isRejectes == false) {
+        res.status(400).send({ message: "incorrect data" });
+    } else {
+        res.status(200).send({message: "request rejected"});
+    }
 }

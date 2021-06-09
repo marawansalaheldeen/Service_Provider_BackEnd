@@ -157,23 +157,25 @@ exports.requestCustomerService = async (cutomerData, io) => {
     console.log("availableProviders", availableProviders);
     // set available providers in database 
     await setClosestServiceProviderToCustomer(availableProviders, requestData.request_id);
-    console.log("the io", io);
+    // console.log("the io", io);
     let obj = {
         request_id: requestData.request_id,
         customer_id: cutomerData.customer_id,
-        user_first_name: customerData.user_first_name,
-        user_last_name: customerData.user_last_name,
-        phone_number: customerData.phone_number,
-        is_confirmed: customerData.is_confirmed,
-        car_maker: customerData.car_maker,
-        car_model: customerData.car_model,
-        car_license: customerData.car_license,
+        user_first_name: cutomerData.user_first_name,
+        user_last_name: cutomerData.user_last_name,
+        phone_number: cutomerData.phone_number,
+        is_confirmed: cutomerData.is_confirmed,
+        car_maker: cutomerData.car_maker,
+        car_model: cutomerData.car_model,
+        car_license: cutomerData.car_license,
         cut_lat: lat,
         cust_lng: long
     }
-    console.log("socket", availableProviders[0].socket_id);
+    // console.log("socket", availableProviders[0].socket_id);
     availableProviders.forEach(provider => {
         console.log("v", provider);
-        io.to(provider.socket_id).emit('message', {obj})
+        io.to(provider.socket_id).emit('message', {request: obj})
     })
+
+    // return true;
 }

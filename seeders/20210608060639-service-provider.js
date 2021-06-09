@@ -15,8 +15,8 @@ module.exports = {
      await queryInterface.bulkInsert('service_provider', [{
       service_provider_id : 1,
       user_id : 1,
-      company_name: 'Toyota Company',
-      company_type: 'Cars',
+      company_name: 'Total Company',
+      company_type: 'Benzene',
       contact_role: '',
       created_at: new Date(),
       updated_at: new Date()
