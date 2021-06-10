@@ -34,4 +34,5 @@ router.post('/setsocketid', controller.servicecProvider.serSocketUSerId);
 
 router.post('/provider/rejectrequest', controller.servicecProvider.rejectingCustomerRequest)
 
+router.get('/getrequestedservices',controller.requests.getPendingRequests);
 module.exports = router;

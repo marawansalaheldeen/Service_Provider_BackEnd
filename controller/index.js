@@ -4,12 +4,13 @@ const worker = require('./worker');
 const customer = require('./customer');
 const service = require('./service');
 const servicecProvider = require('./serviceProvider');
-
+const requests = require('./requests')
 module.exports = {
     register,
     login,
     worker,
     customer,
     service,
-    servicecProvider
+    servicecProvider,
+    requests
 }
