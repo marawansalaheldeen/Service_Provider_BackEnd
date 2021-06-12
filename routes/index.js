@@ -43,5 +43,5 @@ router.post('/worker/changerequest',verifyRequestToken, controller.worker.change
 
 router.post('/customer/requests',verifyRequestToken, controller.customer.getCustomerRequestes);
 
-router.get('/getrequestedservices',controller.requests.getPendingRequests);
+router.post('/getrequestedservices',controller.requests.getPendingRequests);
 module.exports = router;

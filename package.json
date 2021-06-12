@@ -8,9 +8,9 @@
     "migrate": "npx sequelize-cli db:migrate",
     "make-seed": "npx sequelize-cli seed:generate --name service_provider_location",
     "seed": "npx sequelize-cli db:seed:all",
-    "seed-1" : "sequelize db:seed --seed 20210608061037-user.js",
-    "seed-2" : "sequelize db:seed --seed 20210608060639-service-provider.js",
-    "seed-3" : "sequelize db:seed --seed 20210608061749-service_provider_location.js",
+    "seed-1": "sequelize db:seed --seed 20210608061037-user.js",
+    "seed-2": "sequelize db:seed --seed 20210608060639-service-provider.js",
+    "seed-3": "sequelize db:seed --seed 20210608061749-service_provider_location.js",
     "rm-last-mig": "npx sequelize-cli db:migrate:undo",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon app.js"
