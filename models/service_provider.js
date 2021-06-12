@@ -15,6 +15,10 @@ module.exports = (sequelize, DataTypes) => {
       ServiceProvider.hasOne(models.ServiceProviderLocation,{
         foreignKey: "service_provider_id"
       });
+
+      ServiceProvider.belongsTo(models.User,{
+        foreignKey: "user_id"
+    })
     }
   };
   ServiceProvider.init({

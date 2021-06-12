@@ -11,6 +11,9 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             // define association here
+            ServiceProviderLocation.belongsTo(models.ServiceProvider,{
+                foreignKey: "service_provider_id"
+            })
             
             // 1 has many workers
             ServiceProviderLocation.hasMany(models.Worker, {
@@ -20,6 +23,8 @@ module.exports = (sequelize, DataTypes) => {
             ServiceProviderLocation.hasMany(models.serviceProviderService, {
                 foreignKey: "service_provider_location_id"
             });
+
+          
         }
     };
     ServiceProviderLocation.init({

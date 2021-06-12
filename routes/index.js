@@ -28,11 +28,19 @@ router.get('/getservicebyid/:service_id',verifyRequestToken,controller.service.g
 router.post('/updateservicebyid',verifyRequestToken,controller.service.updateServiceById);
 
 router.post('/customer/closestproviders',verifyRequestToken, controller.customer.requestCustomerService);
-router.get('/workers/getavailableworkers', controller.worker.getAvailabbleWorkersBySPL);
+router.get('/workers/getavailableworkers',verifyRequestToken, controller.worker.getAvailabbleWorkersBySPL);
 
 router.post('/setsocketid', controller.servicecProvider.serSocketUSerId);
 
-router.post('/provider/rejectrequest', controller.servicecProvider.rejectingCustomerRequest);
-router.post('/provider/sesrvicestatus', controller.servicecProvider.changeServiceStatus);
+router.post('/provider/rejectrequest',verifyRequestToken, controller.servicecProvider.rejectingCustomerRequest);
+router.post('/provider/sesrvicestatus',verifyRequestToken, controller.servicecProvider.changeServiceStatus);
+
+router.post('/provider/assignworker',verifyRequestToken, controller.worker.assignWorkerToMission);
+
+router.post('/worker/requests',verifyRequestToken, controller.worker.getRequestAssignedByWorkerId);
+
+router.post('/worker/changerequest',verifyRequestToken, controller.worker.changeRequestStatus);
+
+router.post('/customer/requests',verifyRequestToken, controller.customer.getCustomerRequestes);
 
 module.exports = router;

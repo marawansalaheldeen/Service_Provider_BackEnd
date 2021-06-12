@@ -1,4 +1,4 @@
-const { sequelize, Customer, User, Car, Request, RequestServiceProvider } = require('../models');
+const { sequelize, Customer, User, Car, Request, RequestServiceProvider, Service } = require('../models');
 const { QueryTypes } = require('sequelize');
 const carService = require('./car');
 
@@ -174,8 +174,24 @@ exports.requestCustomerService = async (cutomerData, io) => {
     // console.log("socket", availableProviders[0].socket_id);
     availableProviders.forEach(provider => {
         console.log("v", provider);
-        io.to(provider.socket_id).emit('message', {request: obj})
+        io.to(provider.socket_id).emit('message', { request: obj })
     })
 
     // return true;
+}
+
+exports.getCustomerRequestes = async (customerData) => {
+    const { customer_id } = customerData;
+    const requests = await Request.findAll({
+        where: {
+            customer_id
+        },
+        include: [
+            {model: Service, as: 'Service'}
+        ],
+        order: [
+            ['created_at', 'DESC']
+        ]
+    });
+    return requests;
 }

@@ -27,3 +27,12 @@ exports.requestCustomerService = async (req, res)=>{
         res.status(200).send({message: availableServices});
     }
 }
+
+exports.getCustomerRequestes = async (req, res)=>{
+    const requests = await customerService.getCustomerRequestes(req.body);
+    if (!requests) {
+        res.status(400).send({ message: "incorrect data" });
+    } else {
+        res.status(200).send({message: requests});
+    }
+}
