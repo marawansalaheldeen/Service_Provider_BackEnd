@@ -28,7 +28,7 @@ router.get('/getservicebyid/:service_id',verifyRequestToken,controller.service.g
 router.post('/updateservicebyid',verifyRequestToken,controller.service.updateServiceById);
 
 router.post('/customer/closestproviders',verifyRequestToken, controller.customer.requestCustomerService);
-router.get('/workers/getavailableworkers',verifyRequestToken, controller.worker.getAvailabbleWorkersBySPL);
+router.post('/workers/getavailableworkers',verifyRequestToken, controller.worker.getAvailabbleWorkersBySPL);
 
 router.post('/setsocketid', controller.servicecProvider.serSocketUSerId);
 
