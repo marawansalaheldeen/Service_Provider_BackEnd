@@ -11,14 +11,24 @@ exports.getAllService = async ()=>{
 exports.addService = async (serviceData)=>{
     const { fuel_category_id,service_id,service_provider_location_id} = serviceData;
 
-    const sps = await serviceProviderService.create({
+    const providerService = await serviceProviderService.findOne({
         fuel_category_id,
         service_id,
-        service_provider_location_id,
-        is_available:1,
+        service_provider_location_id
     })
+    console.log("sssssssssss", providerService);
+    if(providerService){
+        return "service allready exist";
+    }else{
+        const sps = await serviceProviderService.create({
+            fuel_category_id,
+            service_id,
+            service_provider_location_id,
+            is_available:1,
+        })
+        return sps;
+    }
 
-    return sps;
 }
 
 exports.get_service_by_id = async (service_provider_location_id)=>{

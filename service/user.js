@@ -270,8 +270,7 @@ const verifyEmail = async (email) => {
         <div className= "container" style="
         text-align: center;
         ">
-            <img style="
-            
+            <img style="   
             width: 195px;
         " src="cid:logo" alt="on way logo" class="card__image"/>
 

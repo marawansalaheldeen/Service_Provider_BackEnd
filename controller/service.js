@@ -11,9 +11,11 @@ exports.getAllService = async (req, res)=>{
 
 exports.addService = async (req,res)=>{
     const add_service = await serviceService.addService(req.body);
-
+    console.log(add_service);
     if (!add_service) {
         res.status(400).send({ message: "error occuered" });
+    }else if(add_service == "service allready exist"){
+        res.status(409).send({message: add_service})
     } else {
         res.status(200).send({ message: add_service });
     }
