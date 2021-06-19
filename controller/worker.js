@@ -53,6 +53,7 @@ exports.getRequestAssignedByWorkerId = async (req, res)=>{
 }
 
 exports.changeRequestStatus = async (req, res)=>{
+    console.log("direname", __dirname);
     const isChanged = await workerService.changeRequestStatus(req.body);
     
     if (!isChanged) {

@@ -1,8 +1,9 @@
 const Cryptr = require('cryptr');
 const cryptr = new Cryptr('myTotalySecretKey');
+// const logo = require('');
 
 const sendMailService = require('../utils/sendEmail');
-const {  User, Customer, ServiceProvider, Worker, ServiceProviderLocation, Car } = require('../models');
+const { User, Customer, ServiceProvider, Worker, ServiceProviderLocation, Car } = require('../models');
 const custoemrService = require('./customer');
 const providerService = require('./service-provider');
 const workerService = require('./worker');
@@ -30,7 +31,7 @@ exports.createUser = async function (userData) {
         try {
             let is_confirmed = true;
             let user = {};
-            if(user_type_id == 3){
+            if (user_type_id == 3) {
                 user = await User.create({
                     user_first_name,
                     user_last_name,
@@ -43,7 +44,7 @@ exports.createUser = async function (userData) {
                     longitude,
                     latitude
                 })
-            }else{
+            } else {
                 user = await User.create({
                     user_first_name,
                     user_last_name,
@@ -56,7 +57,7 @@ exports.createUser = async function (userData) {
                     latitude
                 })
             }
-           
+
             console.log("user", user.dataValues.user_id);
             if (user._options.isNewRecord) {
                 // send email with
@@ -266,14 +267,16 @@ const verifyEmail = async (email) => {
 
        <div class="container">
        <div class="card">
-         <img style="
-         margin-left: 45%;
-       " src="https://lh3.googleusercontent.com/ytP9VP86DItizVX2YNA-xTYzV09IS7rh4WexVp7eilIcfHmm74B7odbcwD5DTXmL0PF42i2wnRKSFPBHlmSjCblWHDCD2oD1oaM1CGFcSd48VBKJfsCi4bS170PKxGwji8CPmehwPw=w200-h247-no" alt="Person" class="card__image">
-         <p class="card__name"  style="
-         line-height: 26px;
-         margin-left: 50%;
-         font-weight: bold;
-       ">ON WAY</p>
+        <div className= "container" style="
+        text-align: center;
+        ">
+            <img style="
+            
+            width: 195px;
+        " src="cid:logo" alt="on way logo" class="card__image"/>
+
+        </div>
+        
          <div class="grid-container">
      
          <h1 style="
@@ -307,7 +310,13 @@ const verifyEmail = async (email) => {
     
        </body>
        </html>
-       `
+       `,
+
+        attachments: [{
+            filename: 'icon.png',
+            path: 'D:/on way pro/backend on-way/Service_Provider_BackEnd/utils/images/icon.png',
+            cid: 'logo' //same cid value as in the html img src 
+        }]
     }
 
     await sendMailService.sendMail(mailOptions);
@@ -353,12 +362,11 @@ exports.resetPasswordEmail = async (userEmail) => {
                 color: #000000;
                 font-weight: bold;
               ">click the button below and enter your new password</p>
-                <form action="http://localhost:3000/resetpsw/?tk=${token}">
-                    <input style="
-                    margin-left: 50%;
-                    color: #008000;
-                    font-weight: bold;
-                " type="submit" value="Change Password" />
+              <a style="
+              margin-left: 50%;
+                 color: #008000;
+                 font-weight: bold;
+             " href="http://localhost:8120/resetpassword/?tk=${token}" class="button">Change Password ✔️</a>
                 </form>
             `
         }
