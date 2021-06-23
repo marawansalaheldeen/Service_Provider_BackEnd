@@ -20,7 +20,7 @@ module.exports = {
       contact_role: '',
       created_at: new Date(),
       updated_at: new Date()
-    }],[{
+    },{
       service_provider_id : 2,
       user_id : 2,
       company_name: 'Abu Ghaly motors',
@@ -28,7 +28,7 @@ module.exports = {
       contact_role: '',
       created_at: new Date(),
       updated_at: new Date()
-    }],[{
+    },{
       service_provider_id : 3,
       user_id : 3,
       company_name: 'Barakat Brothers',

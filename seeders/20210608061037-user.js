@@ -24,8 +24,8 @@ module.exports = {
       latitude: 31.246984,
       created_at: new Date(),
       updated_at: new Date()
-    }],
-    [{
+    },
+    {
       user_id: 2,
       user_type_id: 2,
       user_first_name: 'Morad',
@@ -38,7 +38,7 @@ module.exports = {
       latitude: 31.209982,
       created_at: new Date(),
       updated_at: new Date()
-    }],[{
+    },{
       user_id: 3,
       user_type_id: 2,
       user_first_name: 'Saeed',

@@ -10,13 +10,15 @@ exports.getAllService = async ()=>{
 
 exports.addService = async (serviceData)=>{
     const { fuel_category_id,service_id,service_provider_location_id} = serviceData;
-
+    console.log("data", fuel_category_id,service_id,service_provider_location_id);
     const providerService = await serviceProviderService.findOne({
-        fuel_category_id,
-        service_id,
-        service_provider_location_id
+        where: {
+        service_id: service_id,
+        service_provider_location_id: service_provider_location_id,
+        fuel_category_id: fuel_category_id}
     })
-    console.log("sssssssssss", providerService);
+    console.log("service provider", providerService);
+    // console.log("sssssssssss", providerS/ervice);
     if(providerService){
         return "service allready exist";
     }else{

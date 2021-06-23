@@ -60,6 +60,8 @@ exports.getAvailabbleWorkersBySPL = async (servieProviderLocation) => {
         ]
     })
 
+    console.log("available workers", availble_worker);
+
     return availble_worker;
 }
 

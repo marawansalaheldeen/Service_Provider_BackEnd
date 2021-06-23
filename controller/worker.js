@@ -23,7 +23,7 @@ exports.getWorkersByProviderId = async (req, res)=>{
 exports.getAvailabbleWorkersBySPL = async (req, res)=>{
     
     const available_workers = await workerService.getAvailabbleWorkersBySPL(req.body.service_provider_location_id);
-    
+    console.log("available_workers", available_workers);
     if (!available_workers) {
         res.status(400).send({ message: "error occuered" });
     } else {

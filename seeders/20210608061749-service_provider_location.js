@@ -20,7 +20,7 @@ module.exports = {
       status: 'In_Active',
       created_at: new Date(),
       updated_at: new Date()
-    }],[{
+    },{
       service_provider_location_id: 2,
       service_provider_id: 2,
       city: 'Alexandria',
@@ -29,8 +29,8 @@ module.exports = {
       status: 'In_Active',
       created_at: new Date(),
       updated_at: new Date()
-    }],
-    [{
+    },
+    {
       service_provider_location_id: 3,
       service_provider_id: 3,
       city: 'Alexandria',
