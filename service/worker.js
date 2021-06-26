@@ -163,7 +163,8 @@ const assignWorker = async (workerId) => {
 exports.getRequestAssignedByWorkerId = async (workerData) => {
     const request = await Request.findAll({
         where: {
-            worker_id: workerData.worker_id
+            worker_id: workerData.worker_id,
+            request_status
         },
 
         include: [
@@ -181,6 +182,7 @@ exports.getRequestAssignedByWorkerId = async (workerData) => {
         ]
 
     });
+
     return request;
 };
 
@@ -196,5 +198,16 @@ exports.changeRequestStatus = async (workerData) => {
             }
         }
     )
-    return isChanged == 0 ? false : true;
+    if(request_status == "Arrived"){
+        const isAvailable = Worker.update({
+            is_available: 0
+        },
+            {
+                where:{
+                    user_id: worker_id
+                }
+            }
+        )
+    }
+    return isChanged[0] == 0 ? false : true;
 }
