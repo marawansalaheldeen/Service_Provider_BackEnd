@@ -45,7 +45,7 @@ exports.getWorkersByProviderId = async (servieProviderLocation) => {
             { model: User, as: 'User' }
         ]
     })
-
+    console.log("worker in user", workers[0].User);
     return workers;
 }
 
@@ -181,6 +181,8 @@ exports.getRequestAssignedByWorkerId = async (workerData) => {
         ]
 
     });
+    request[0].Customer.User.longitude = parseFloat(request[0].Customer.User.longitude)
+    request[0].Customer.User.latitude = parseFloat(request[0].Customer.User.latitude)
     return request;
 };
 
@@ -196,5 +198,6 @@ exports.changeRequestStatus = async (workerData) => {
             }
         }
     )
-    return isChanged == 0 ? false : true;
+    console.log("is cahnged", isChanged);
+    return isChanged[0] == 0 ? false : true;
 }
