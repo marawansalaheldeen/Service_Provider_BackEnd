@@ -5,6 +5,7 @@ const customer = require('./customer');
 const service = require('./service');
 const servicecProvider = require('./serviceProvider');
 const requests = require('./requests')
+const charts = require('./charts')
 module.exports = {
     register,
     login,
@@ -12,5 +13,6 @@ module.exports = {
     customer,
     service,
     servicecProvider,
-    requests
+    requests,
+    charts
 }

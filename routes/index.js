@@ -44,4 +44,9 @@ router.post('/worker/changerequest',verifyRequestToken, controller.worker.change
 router.post('/customer/requests',verifyRequestToken, controller.customer.getCustomerRequestes);
 
 router.post('/getrequestedservices',controller.requests.getPendingRequests);
+
+router.post('/getbarchardata',controller.charts.requestBarChart);
+
+router.post('/gettotalmoney',controller.charts.requestBarChart);
+
 module.exports = router;
