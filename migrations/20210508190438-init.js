@@ -264,6 +264,10 @@ module.exports = {
         type: Sequelize.BOOLEAN,
         defaultValue: true
       },
+      worker_rating: {
+        type: Sequelize.DOUBLE,
+        defaultValue: 0
+      },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE
@@ -443,6 +447,10 @@ module.exports = {
         type: Sequelize.DATE
       },
       fine: {
+        type: Sequelize.DOUBLE,
+        defaultValue: '0'
+      }, 
+      rating: {
         type: Sequelize.DOUBLE,
         defaultValue: '0'
       },
