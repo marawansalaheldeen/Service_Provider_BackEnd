@@ -13,6 +13,7 @@ exports.updateWorker = async(req, res)=>{
 exports.getWorkersByProviderId = async (req, res)=>{
     console.log("location id", req.body.service_provider_location_id);
     const workers = await workerService.getWorkersByProviderId(req.body.service_provider_location_id);
+    console.log("workersssss", workers);
     if (!workers) {
         res.status(400).send({ message: "error occuered" });
     } else {
