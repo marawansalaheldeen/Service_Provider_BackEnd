@@ -49,4 +49,8 @@ router.post('/getbarchardata',controller.charts.requestBarChart);
 
 router.post('/gettotalmoney',controller.charts.requestBarChart);
 
+router.post('/customer/cancelwfine', controller.customer.cancelCustomerRequestWithFine);
+
+router.post('/customer/cancel', controller.customer.cancelCustomerRequest);
+
 module.exports = router;

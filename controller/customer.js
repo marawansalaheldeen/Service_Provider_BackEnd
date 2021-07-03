@@ -19,7 +19,7 @@ exports.updateUserCar = async (req, res)=>{
 } 
 
 exports.requestCustomerService = async (req, res)=>{
-    var io = req.app.get('socketio');
+    let io = req.app.get('socketio');
     const availableServices = await customerService.requestCustomerService(req.body, io);
     if (availableServices == false) {
         res.status(400).send({ message: "incorrect data" });
@@ -34,5 +34,27 @@ exports.getCustomerRequestes = async (req, res)=>{
         res.status(400).send({ message: "incorrect data" });
     } else {
         res.status(200).send({message: requests});
+    }
+}
+
+exports.cancelCustomerRequestWithFine = async(req, res)=>{
+    let io = req.app.get('socketio');
+
+    const result = await customerService.cancelCustomerRequestWithFine(req.body, io);
+    if (!result) {
+        res.status(400).send({ message: "incorrect data" });
+    } else {
+        res.status(200).send({message: result});
+    }
+}
+
+exports.cancelCustomerRequest = async (req, res)=>{
+    let io = req.app.get('socketio');
+
+    const result = await customerService.cancelCustomerRequest(req.body, io);
+    if (!result) {
+        res.status(400).send({ message: "incorrect data" });
+    } else {
+        res.status(200).send({message: "cancelled successfully"});
     }
 }
