@@ -41,7 +41,7 @@ router.post('/worker/requests',verifyRequestToken, controller.worker.getRequestA
 
 router.post('/worker/changerequest',verifyRequestToken, controller.worker.changeRequestStatus);
 
-router.post('/customer/requests',verifyRequestToken, controller.customer.getCustomerRequestes);
+router.post('/customer/requests', controller.customer.getCustomerRequestes);
 
 router.post('/getrequestedservices',controller.requests.getPendingRequests);
 
@@ -52,5 +52,12 @@ router.post('/gettotalmoney',controller.charts.requestBarChart);
 router.post('/customer/cancelwfine', controller.customer.cancelCustomerRequestWithFine);
 
 router.post('/customer/cancel', controller.customer.cancelCustomerRequest);
+
+router.post('/customer/rateworker', controller.customer.addWorkerRate);
+
+router.post('/set/lnglat', controller.customer.addNewUserLngLat);
+
+router.post('/get/lnglat', controller.customer.getNewUserLngLat);
+
 
 module.exports = router;

@@ -28,6 +28,7 @@ module.exports = (sequelize, DataTypes) => {
     user_id: DataTypes.INTEGER,
     service_provider_location_id: DataTypes.INTEGER,
     is_available: DataTypes.BOOLEAN,
+    worker_rating: DataTypes.DECIMAL,
     created_at: {
       allowNull: false,
       type: DataTypes.DATE,

@@ -58,3 +58,31 @@ exports.cancelCustomerRequest = async (req, res)=>{
         res.status(200).send({message: "cancelled successfully"});
     }
 }
+
+exports.addWorkerRate = async(req, res)=>{
+    const result = await customerService.addWorkerRate(req.body);
+    if (!result) {
+        res.status(400).send({ message: "incorrect data" });
+    } else {
+        res.status(200).send({message: "worker rated successfully"});
+    }
+
+}
+
+exports.addNewUserLngLat = async(req, res)=>{
+    const result = await customerService.addNewUserLngLat(req.body);
+    if (!result) {
+        res.status(400).send({ message: "incorrect data" });
+    } else {
+        res.status(200).send({message: "worker rated successfully"});
+    }
+}
+
+exports.getNewUserLngLat = async(req, res)=>{
+    const user = await customerService.getNewUserLngLat(req.body);
+    if (!user) {
+        res.status(400).send({ message: "incorrect data" });
+    } else {
+        res.status(200).send({message: user});
+    }
+}

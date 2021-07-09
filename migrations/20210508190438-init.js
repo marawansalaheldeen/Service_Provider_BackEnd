@@ -454,6 +454,10 @@ module.exports = {
         type: Sequelize.DOUBLE,
         defaultValue: '0'
       },
+      passengers: {
+        type: Sequelize.INTEGER,
+        defaultValue: '0'
+      },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE

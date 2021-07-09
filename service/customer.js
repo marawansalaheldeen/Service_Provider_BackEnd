@@ -77,13 +77,15 @@ const createRequest = async (requestData) => {
         customer_id,
         service_id,
         fuel_category_id,
-        total_price
+        total_price,
+        passengersnumber
     } = requestData;
     const request = await Request.create({
-        customer_id,
-        service_id,
-        fuel_category_id,
-        total_price
+        customer_id: customer_id,
+        service_id: service_id,
+        fuel_category_id: fuel_category_id,
+        total_price: total_price,
+        passengers: passengersnumber
     });
     console.log("req", request);
     requestData.request_id = request.dataValues.request_id;
@@ -182,18 +184,48 @@ exports.requestCustomerService = async (cutomerData, io) => {
 }
 
 exports.getCustomerRequestes = async (customerData, io) => {
+    // customer_id from user 
     const { customer_id } = customerData;
-    const requests = await Request.findAll({
-        where: {
-            customer_id
-        },
-        include: [
-            { model: Service, as: 'Service' }
-        ],
-        order: [
-            ['created_at', 'DESC']
-        ]
-    });
+    console.log("customer id", customer_id);
+
+    const requests = await sequelize.query(`
+    SELECT r.*, u.*, s.*
+    FROM request r
+    INNER JOIN service s
+    ON s.service_id = r.service_id
+    INNER JOIN user u
+    ON u.user_id = r.worker_id
+    WHERE r.customer_id = ${customer_id}
+    ORDER BY r.created_at DESC
+    `,
+        { type: QueryTypes.SELECT });
+
+    // const requests = await Request.findAll({
+    //     where: {
+    //         customer_id
+    //     },
+    //     include: [
+    //         { model: Service, as: 'Service' },
+    //         { 
+    //             model: Worker,
+    //             where: {
+    //                 user_id : customer_id
+    //             },
+    //             include: [
+    //                 {
+    //                     model:User,
+    //                     where: {
+    //                         user_id: customer_id
+    //                     }
+    //                 }
+    //             ],
+    //         }
+    //     ],
+    //     order: [
+    //         ['created_at', 'DESC']
+    //     ]
+    // });
+    console.log("requestes", requests);
     return requests;
 }
 
@@ -261,13 +293,13 @@ const cancelRequestByCustomer = (request_id, request_status, fine, customer_id,
         })
         console.log("request_status", request_status);
         if (request_status == 'Pending') {
-            
+
             RequestServiceProvider.findAll({
                 where: {
                     request_id
                 }
             }).then(providers => {
-                
+
                 providers.forEach(async provider => {
                     const user = await sequelize.query(`
                         SELECT * 
@@ -298,7 +330,7 @@ const cancelRequestByCustomer = (request_id, request_status, fine, customer_id,
 
 
             })
-            
+
             // worker id from user 
             Worker.update({
                 is_available: 0
@@ -314,15 +346,99 @@ const cancelRequestByCustomer = (request_id, request_status, fine, customer_id,
     return true;
 }
 
-exports.cancelCustomerRequest = async(requestData, io)=>{
-    const {request_id, fine, customer_id} = requestData;
+exports.cancelCustomerRequest = async (requestData, io) => {
+    const { request_id, fine, customer_id } = requestData;
     const request = await Request.findOne({
         where: {
             request_id
         }
     });
     await cancelRequestByCustomer(request_id, request.dataValues.request_status,
-        fine, customer_id, request.dataValues.service_provider_location_id, 
+        fine, customer_id, request.dataValues.service_provider_location_id,
         request.dataValues.worker_id, io);
     return true;
+}
+
+exports.addWorkerRate = async (customerData) => {
+
+    console.log("customer Data", customerData);
+    // user_id is for customer from user table
+    // worker_id from user tble
+    const { user_id, request_id, rate, worker_id } = customerData;
+    if (rate == 0) {
+        return false;
+    }
+    Request.update({
+        rating: rate
+    },
+        {
+            where: {
+                request_id: request_id,
+                customer_id: user_id,
+                request_status: 'Completed'
+            }
+        }
+    )
+
+    const requests = await Request.findAll({
+        where: {
+            worker_id: worker_id
+        }
+    })
+    // console.log("re",requests );
+    let requestRatedLength = 0;
+    let sumRating = 0;
+    requests.forEach(request => {
+        console.log("reqqqqqqqqq", request.dataValues.rating);
+        if (request.dataValues.rating != 0) {
+            requestRatedLength += 1;
+        }
+        sumRating += request.dataValues.rating
+    });
+    console.log(requestRatedLength);
+    console.log(sumRating);
+
+    let totalUpdatedRate = (sumRating / requestRatedLength);
+    console.log("totalUpdatedRate", totalUpdatedRate);
+
+    Worker.update({
+        worker_rating: totalUpdatedRate
+    },
+        {
+            where: {
+                user_id: worker_id
+            }
+        })
+
+    return true;
+}
+
+exports.addNewUserLngLat = async (userData) => {
+    console.log("userData", userData);
+    User.update(
+        {
+            longitude: userData.longitude,
+            latitude: userData.latitude
+        },
+        {
+            where: { user_id: userData.user_id }
+        }
+    )
+
+    return true;
+}
+
+exports.getNewUserLngLat = async (userData) => {
+    console.log("userData", userData);
+    const user = await User.findOne(
+        {
+            where: { user_id: userData.user_id }
+        }
+    )
+    console.log("user", user);
+        if(user){
+            user.dataValues.longitude = parseFloat(user.dataValues.longitude);
+            user.dataValues.latitude = parseFloat(user.dataValues.latitude);
+        }
+    return user;
 }

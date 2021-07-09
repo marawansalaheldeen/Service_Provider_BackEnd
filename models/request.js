@@ -21,17 +21,17 @@ module.exports = (sequelize, DataTypes) => {
                 foreignKey: "service_provider_location_id"
             });
 
-            Request.belongsTo(models.Customer, { 
+            Request.belongsTo(models.Customer, {
                 foreignKey: "customer_id"
             })
 
-            Request.belongsTo(models.Service,{
+            Request.belongsTo(models.Service, {
                 foreignKey: "service_id"
             })
 
-            Request.belongsTo(models.FuelCategory,{
+            Request.belongsTo(models.FuelCategory, {
                 foreignKey: 'fuel_category_id'
-              })
+            })
 
         }
     };
@@ -55,6 +55,11 @@ module.exports = (sequelize, DataTypes) => {
         is_cancelled: DataTypes.BOOLEAN,
         assigined_date: DataTypes.STRING,
         fine: DataTypes.BOOLEAN,
+        rating: DataTypes.INTEGER,
+        passengers: {
+            type: DataTypes.INTEGER,
+            defaultValue: 0
+        },
         created_at: {
             allowNull: false,
             type: DataTypes.DATE,

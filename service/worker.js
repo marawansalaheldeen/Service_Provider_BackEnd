@@ -1,5 +1,7 @@
-const { Worker, User, RequestServiceProvider, ServiceProviderLocation, ServiceProvider,
+const { sequelize, Worker, User, RequestServiceProvider, ServiceProviderLocation, ServiceProvider,
     Request, Customer, Car } = require('../models');
+const { QueryTypes, where } = require('sequelize');
+
 
 exports.createWorker = async (userData) => {
     const { user_id, service_provider_location_id } = userData;
@@ -67,6 +69,7 @@ exports.getAvailabbleWorkersBySPL = async (servieProviderLocation) => {
 
 exports.assignWorkerToMission = async (workerData, io) => {
     const { request_id, service_provider_location_id, worker_id } = workerData;
+    console.log("assigning worker");
     //remove request from other providers
     const serviceProviders = await RequestServiceProvider.findAll({
         where: {
@@ -91,7 +94,7 @@ exports.assignWorkerToMission = async (workerData, io) => {
     console.log("services", serviceProviders[0].dataValues.ServiceProviderLocation.ServiceProvider.User);
 
     serviceProviders.forEach(provider => {
-        // console.log("v", provider);
+        
         console.log("user", provider.dataValues.ServiceProviderLocation.ServiceProvider.User.socket_id);
         let providerSocket = provider.dataValues.ServiceProviderLocation.ServiceProvider.User.socket_id;
         io.to(providerSocket).emit('removeRequest', { requestId: request_id })
@@ -125,6 +128,7 @@ exports.assignWorkerToMission = async (workerData, io) => {
         }
     }).then(async () => {
         // send to worker
+        console.log("assssigning worker");
         const assigned = await assignWorker(worker_id);
         if (!assigned) {
             return isAssigend = false;
@@ -136,12 +140,14 @@ exports.assignWorkerToMission = async (workerData, io) => {
         console.log(error);
         return isAssigend;
     });
+    console.log("aaaaaaaaa", );
     console.log("isAssigend", isAssigend);
 
     return isAssigend;
 }
 
 const assignWorker = async (workerId) => {
+    console.log("worker id", workerId);
     const isAssigned = await Worker.update({
         is_available: 0
     },
@@ -161,29 +167,48 @@ const assignWorker = async (workerId) => {
 }
 
 exports.getRequestAssignedByWorkerId = async (workerData) => {
-    const request = await Request.findAll({
-        where: {
-            worker_id: workerData.worker_id,
-            request_status
-        },
+    console.log("worker data", workerData);
 
-        include: [
-            {
-                model: Customer, as: 'Customer',
-                include: [
-                    {
-                        model: User, as: 'User'
-                    }, {
-                        model: Car, as: 'Cars'
-                    }
-                ]
-            },
+    const request = await sequelize.query(`
+        SELECT r.*, u.*, cc.*
+        FROM request r 
+        INNER JOIN user u
+        ON u.user_id = r.customer_id
+        INNER JOIN customer c
+        ON c.user_id = u.user_id
+        INNER JOIN customer_car cc
+        ON cc.customer_id = c.customer_id
+        WHERE worker_id = ${workerData.worker_id} AND r.request_status != 'Completed'
+    `,
+        { type: QueryTypes.SELECT });
 
-        ]
+    // const request = await Request.findAll({
+    //     where: {
+    //         worker_id: workerData.worker_id,
+    //         request_status: 'Assigned'
+    //     },
 
-    });
-    request[0].Customer.User.longitude = parseFloat(request[0].Customer.User.longitude)
-    request[0].Customer.User.latitude = parseFloat(request[0].Customer.User.latitude)
+    //     include: [
+    //         {
+    //             model: Customer, as: 'Customer',
+    //             include: [
+    //                 {
+    //                     model: User
+    //                 }, {
+    //                     model: Car
+    //                 }
+    //             ]
+    //         },
+
+    //     ]
+
+    // });
+    console.log("requests", request);
+    if(request.length > 0){
+        request[0].longitude = parseFloat(request[0].longitude)
+        request[0].latitude = parseFloat(request[0].latitude)
+    }
+    
     return request;
 };
 

@@ -16,35 +16,21 @@ module.exports = {
       service_id: 2,
       fuel_category_name: '80',
       fuel_category_description: '',
-      fuel_category_price: 85,
-      created_at: new Date(),
-      updated_at: new Date()
-    }, {
-      service_id: 2,
-      fuel_category_name: '85',
-      fuel_category_description: '',
-      fuel_category_price: 90,
-      created_at: new Date(),
-      updated_at: new Date()
-    },{
-      service_id: 2,
-      fuel_category_name: '90',
-      fuel_category_description: '',
-      fuel_category_price: 95,
+      fuel_category_price: 205,
       created_at: new Date(),
       updated_at: new Date()
     }, {
       service_id: 2,
       fuel_category_name: '92',
       fuel_category_description: '',
-      fuel_category_price: 96,
+      fuel_category_price: 240,
       created_at: new Date(),
       updated_at: new Date()
     },{
       service_id: 2,
       fuel_category_name: '95',
       fuel_category_description: '',
-      fuel_category_price: 100,
+      fuel_category_price: 260,
       created_at: new Date(),
       updated_at: new Date()
     }], {})
