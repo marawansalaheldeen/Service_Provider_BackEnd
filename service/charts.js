@@ -33,30 +33,45 @@ module.exports.requestBarChart = async(data)=>{
 
 
 module.exports.totalMoneyEarned = async(data)=>{
+
     const totalAmount = await Request.findAll({
+        where:{
+            service_provider_location_id:data.service_provider_location_id,
+            request_status:"Assigned"
+        },
         attributes: [
-          data.service_provider_location_id,
-          [sequelize.fn('sum', sequelize.col('total_price')), 'total_money'],
+            'service_provider_location_id',
+            [sequelize.fn('sum', sequelize.col('total_price')), 'total_money'],
         ],
-        group: [data.service_provider_location_id],
+        group: ['Request.service_provider_location_id'],
+        raw:true
     });
 
     const totalFine = await Request.findAll({
-        attributes: [
-          data.service_provider_location_id,
-          [sequelize.fn('sum', sequelize.col('fine')), 'total_money_cancelled'],
-        ],
         where:{
+            service_provider_location_id:data.service_provider_location_id,
             is_cancelled:1
         },
-        group: [data.service_provider_location_id],
+        attributes: [
+            'service_provider_location_id',
+            [sequelize.fn('sum', sequelize.col('fine')), 'total_money_cancelled'],
+        ],
+        group: ['Request.service_provider_location_id'],
+        raw:true
     });
 
-    var total = totalAmount + totalFine
+    console.log(totalAmount);
+    if(totalAmount.length < 1){
+        var total = 0 + totalFine[0].total_money_cancelled
+    }else{
+        var total = totalAmount[0].total_money + totalFine[0].total_money_cancelled
+    }
+    
     var money_data = {
         totalAmount,
         totalFine,
         total
+        
     }
     return money_data
 }
