@@ -51,7 +51,10 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: 'Pending'
         },
         worker_id: DataTypes.INTEGER,
-        total_price: DataTypes.INTEGER,
+        total_price: {
+            type: DataTypes.INTEGER,
+            defaultValue: 0
+        },
         is_cancelled: DataTypes.BOOLEAN,
         assigined_date: DataTypes.STRING,
         fine: DataTypes.BOOLEAN,
