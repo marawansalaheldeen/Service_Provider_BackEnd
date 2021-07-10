@@ -31,3 +31,13 @@ exports.changeServiceStatus = async (req, res)=>{
         res.status(200).send({message: "status updated"});
     }
 }
+
+exports.getAllRequestsById = async(req, res)=>{
+    const requests = await serviceProviderLocation.getAllRequestsById(req.body);
+    console.log("isUpdated", requests);
+    if (!requests) {
+        res.status(400).send({ message: "incorrect data" });
+    } else {
+        res.status(200).send({message: requests});
+    }
+}

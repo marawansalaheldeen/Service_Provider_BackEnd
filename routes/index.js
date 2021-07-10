@@ -59,5 +59,7 @@ router.post('/set/lnglat', controller.customer.addNewUserLngLat);
 
 router.post('/get/lnglat', controller.customer.getNewUserLngLat);
 
+router.post('/provider/getequests', controller.servicecProvider.getAllRequestsById);
+
 
 module.exports = router;
