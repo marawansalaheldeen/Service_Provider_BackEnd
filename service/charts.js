@@ -37,7 +37,7 @@ module.exports.totalMoneyEarned = async(data)=>{
     const totalAmount = await Request.findAll({
         where:{
             service_provider_location_id:data.service_provider_location_id,
-            request_status:"Assigned"
+            request_status:"Completed",
         },
         attributes: [
             'service_provider_location_id',
