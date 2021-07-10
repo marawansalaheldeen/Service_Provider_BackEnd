@@ -1,5 +1,5 @@
 const { sequelize, ServiceProviderLocation, RequestServiceProvider, serviceProviderService,
-     Request } = require('../models');
+    Request } = require('../models');
 const { QueryTypes, where } = require('sequelize');
 
 exports.createServiceProviderLocation = async (userData) => {
@@ -60,15 +60,15 @@ exports.changeServiceStatus = async (serviceData) => {
                     })
             }
         })
-        .catch( error => {
+        .catch(error => {
             console.log(error);
             isUpdated = false;
         })
 
-        return isUpdated;
+    return isUpdated;
 }
 
-exports.getAllRequestsById = async(providerData)=>{
+exports.getAllRequestsById = async (providerData) => {
     const { service_provider_location_id } = providerData;
 
     const requests = await sequelize.query(`SELECT r.*,
@@ -89,7 +89,49 @@ exports.getAllRequestsById = async(providerData)=>{
     INNER JOIN service s
     ON s.service_id = r.service_id
     WHERE service_provider_location_id = ${service_provider_location_id}`,
-    { type: QueryTypes.SELECT });
+        { type: QueryTypes.SELECT });
 
     return requests;
+}
+
+exports.getProviderTotals = async (providerData) => {
+    const { service_provider_location_id } = providerData;
+
+    const completedRequests = await sequelize.query(`
+    SELECT COUNT(*) AS total_completed 
+    FROM request 
+    WHERE service_provider_location_id = ${service_provider_location_id} AND request_status = 'Completed'
+    `,
+        { type: QueryTypes.SELECT });
+
+    const inprogressRequests = await sequelize.query(`
+    SELECT COUNT(*) AS total_inprogress
+    FROM request 
+    WHERE service_provider_location_id = ${service_provider_location_id} AND request_status = 'Inprogress'
+    `,
+        { type: QueryTypes.SELECT });
+
+    const totalServices = await sequelize.query(`
+    SELECT COUNT(sps_id) AS total_services
+    FROM service_provider_service 
+    WHERE service_provider_location_id = ${service_provider_location_id} AND is_available = 1
+    `,
+        { type: QueryTypes.SELECT });
+
+    const totalWorkers = await sequelize.query(`
+    SELECT COUNT(worker_id) AS total_workers 
+    FROM worker 
+    WHERE service_provider_location_id = ${service_provider_location_id}
+    `,
+        { type: QueryTypes.SELECT });
+
+    // console.log(completedRequests, inprogressRequests, totalServices, totalWorkers);
+    let totals = {};
+    totals.total_completed = completedRequests[0].total_completed;
+    totals.total_inprogress = inprogressRequests[0].total_inprogress;
+    totals.total_services = totalServices[0].total_services;
+    totals.total_workers = totalWorkers[0].total_workers;
+    // console.log(totals);
+
+    return totals;
 }
