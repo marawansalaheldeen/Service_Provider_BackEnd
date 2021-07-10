@@ -1,7 +1,8 @@
 const serviceService = require('../service/service');
 
 exports.getAllService = async (req, res)=>{
-    const services = await serviceService.getAllService();
+    console.log(req.body);
+    const services = await serviceService.getAllService(req.body);
     if (!services) {
         res.status(400).send({ message: "error occuered" });
     } else {

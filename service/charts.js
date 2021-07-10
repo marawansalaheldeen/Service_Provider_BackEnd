@@ -37,7 +37,7 @@ module.exports.totalMoneyEarned = async(data)=>{
     const totalAmount = await Request.findAll({
         where:{
             service_provider_location_id:data.service_provider_location_id,
-            request_status:"Completed",
+            request_status:"Completed"
         },
         attributes: [
             'service_provider_location_id',
@@ -60,7 +60,7 @@ module.exports.totalMoneyEarned = async(data)=>{
         raw:true
     });
 
-    console.log(totalAmount);
+    console.log('totalAmount',totalAmount);
     if(totalAmount.length < 1){
         var total = 0 + totalFine[0].total_money_cancelled
     }else{
@@ -73,6 +73,7 @@ module.exports.totalMoneyEarned = async(data)=>{
         total
         
     }
+    console.log("money_data", money_data);
     return money_data
 }
 

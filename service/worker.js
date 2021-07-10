@@ -153,13 +153,14 @@ const assignWorker = async (workerId) => {
     },
         {
             where: {
-                worker_id: workerId,
+                user_id: workerId,
                 is_available: 1
             }
         }).then(() => {
+            console.log("success in updateting", err);
             return true;
         }).catch((err) => {
-            console.log(err);
+            console.log("err in assgining", err);
             return false;
         })
     console.log("is assigned worker", isAssigned);
