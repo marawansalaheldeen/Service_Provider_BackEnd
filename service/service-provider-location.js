@@ -79,12 +79,15 @@ exports.getAllRequestsById = async(providerData)=>{
     w.user_first_name AS worker_first_name,
     w.user_last_name AS worker_last_name,
     w.user_email AS worker_email,
-    w.phone_number AS worker_phone
+    w.phone_number AS worker_phone,
+    s.*
     FROM request r
     INNER JOIN user c
     ON c.user_id = r.customer_id
     INNER JOIN user w
     ON w.user_id = r.worker_id
+    INNER JOIN service s
+    ON s.service_id = r.service_id
     WHERE service_provider_location_id = ${service_provider_location_id}`,
     { type: QueryTypes.SELECT });
 
