@@ -17,7 +17,7 @@ router.post('/user',verifyRequestToken, controller.login.getUserData);
 // Get all users
 router.get('/users',verifyRequestToken, controller.login.getAllUsers);
 router.post('/updatecar',verifyRequestToken, controller.customer.updateUserCar);
-router.get('/getservices',verifyRequestToken, controller.service.getAllService);
+router.post('/getservices',verifyRequestToken, controller.service.getAllService);
 router.post('/usersbyid',verifyRequestToken, controller.login.getAllUsersByTypeId);
 router.post('/workerbyid',verifyRequestToken, controller.worker.getWorkersByProviderId);
 router.post('/userbyid',verifyRequestToken, controller.login.getUserById);
