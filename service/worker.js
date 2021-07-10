@@ -213,6 +213,7 @@ exports.getRequestAssignedByWorkerId = async (workerData) => {
 };
 
 exports.changeRequestStatus = async (workerData) => {
+    // worker from user table
     const { request_id, worker_id, request_status } = workerData;
     const isChanged = await Request.update({
         request_status: request_status
@@ -224,9 +225,9 @@ exports.changeRequestStatus = async (workerData) => {
             }
         }
     )
-    if(request_status == "Arrived"){
+    if(request_status == "Arrived" || request_status == "Completed"){
         const isAvailable = Worker.update({
-            is_available: 0
+            is_available: 1
         },
             {
                 where:{
@@ -235,5 +236,6 @@ exports.changeRequestStatus = async (workerData) => {
             }
         )
     }
+    console.log(isChanged[0]);
     return isChanged[0] == 0 ? false : true;
 }

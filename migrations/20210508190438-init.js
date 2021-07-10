@@ -438,6 +438,7 @@ module.exports = {
       },
       total_price: {
         type: Sequelize.DOUBLE,
+        defaultValue: 0
       },
       is_cancelled: {
         type: Sequelize.BOOLEAN,
