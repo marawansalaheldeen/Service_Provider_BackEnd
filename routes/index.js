@@ -47,7 +47,7 @@ router.post('/getrequestedservices',controller.requests.getPendingRequests);
 
 router.post('/getbarchardata',controller.charts.requestBarChart);
 
-router.post('/gettotalmoney',controller.charts.requestBarChart);
+router.post('/gettotalmoney',controller.charts.totalMoneyEarned);
 
 router.post('/customer/cancelwfine', controller.customer.cancelCustomerRequestWithFine);
 
@@ -60,6 +60,8 @@ router.post('/set/lnglat', controller.customer.addNewUserLngLat);
 router.post('/get/lnglat', controller.customer.getNewUserLngLat);
 
 router.post('/provider/getequests', controller.servicecProvider.getAllRequestsById);
+
+router.post('/provider/reports', controller.servicecProvider.getProviderTotals);
 
 
 module.exports = router;
