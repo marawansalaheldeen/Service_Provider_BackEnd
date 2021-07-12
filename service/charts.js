@@ -60,20 +60,21 @@ module.exports.totalMoneyEarned = async(data)=>{
         raw:true
     });
 
-    console.log('totalAmount',totalAmount);
-    if(totalAmount.length < 1){
-        var total = 0 + totalFine[0].total_money_cancelled
-    }else{
-        var total = totalAmount[0].total_money + totalFine[0].total_money_cancelled
-    }
+    console.log('totalFine',totalFine);
+    // if(totalAmount.length < 1){
+    //     var total = 0 + totalFine[0].total_money_cancelled
+    // }else{
+    //     var total = totalAmount[0].total_money + totalFine[0].total_money_cancelled
+    // }
+    console.log("total amount", totalAmount);
     
-    var money_data = {
-        totalAmount,
-        totalFine,
-        total
+    // var money_data = {
+    //     totalAmount,
+    //     totalFine,
+    //     total
         
-    }
-    console.log("money_data", money_data);
-    return money_data
+    // }
+    // console.log("money_data", money_data);
+    return totalAmount;
 }
 

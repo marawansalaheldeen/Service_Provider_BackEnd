@@ -324,7 +324,7 @@ const cancelRequestByCustomer = (request_id, request_status, fine, customer_id,
                     user_id: service_provider_location_id
                 }
             }).then(async user => {
-                console.log("user", user);
+                console.log("user that cancelled socket", user.socket_id);
 
                 io.to(user.socket_id).emit('cancelRequest', { requestId: request_id, fine: fine });
 
@@ -333,7 +333,7 @@ const cancelRequestByCustomer = (request_id, request_status, fine, customer_id,
 
             // worker id from user 
             Worker.update({
-                is_available: 0
+                is_available: 1
             },
                 {
                     where: {
