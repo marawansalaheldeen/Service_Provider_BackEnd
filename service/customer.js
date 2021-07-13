@@ -264,7 +264,8 @@ const cancelRequestByCustomer = (request_id, request_status, fine, customer_id,
     Request.update({
         fine: fine,
         is_cancelled: 1,
-        request_status: 'Cancelled'
+        request_status: 'Cancelled',
+        worker_id:0
     },
         {
             where: {
@@ -298,8 +299,14 @@ const cancelRequestByCustomer = (request_id, request_status, fine, customer_id,
                 where: {
                     request_id
                 }
+            }).then(async res=>{
+                Worker.update({
+                    is_available:0,
+                    where:{
+                        worker_id
+                    }
+                })
             }).then(providers => {
-
                 providers.forEach(async provider => {
                     const user = await sequelize.query(`
                         SELECT * 
